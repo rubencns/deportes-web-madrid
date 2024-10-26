@@ -1,50 +1,179 @@
----
-interface Props {
-	title: string;
-}
-
-const { title } = Astro.props;
----
-
 <!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="description" content="Astro description" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Liga Municipal de Baloncesto Hortaleza" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Liga Municipal de Baloncesto Hortaleza</title>
+  </head>
+  <body>
+    <slot />
+  </body>
 </html>
 <style is:global>
-	:root {
-		--accent: 136, 58, 234;
-		--accent-light: 224, 204, 250;
-		--accent-dark: 49, 10, 101;
-		--accent-gradient: linear-gradient(
-			45deg,
-			rgb(var(--accent)),
-			rgb(var(--accent-light)) 30%,
-			white 60%
-		);
-	}
-	html {
-		font-family: system-ui, sans-serif;
-		background: #13151a;
-	}
-	code {
-		font-family:
-			Menlo,
-			Monaco,
-			Lucida Console,
-			Liberation Mono,
-			DejaVu Sans Mono,
-			Bitstream Vera Sans Mono,
-			Courier New,
-			monospace;
-	}
+  :root {
+    --primary-color: #003df6;
+    --primary-light-color: #003df630;
+    --primary-very-light-color: #eff3ff;
+    --black-color: #0f2145;
+    --white-color: #fff;
+  }
+
+  @font-face {
+    font-family: "Montserrat";
+    src: url("/fonts/Montserrat-Thin.ttf") format("truetype");
+    font-weight: 100;
+  }
+
+  @font-face {
+    font-family: "Montserrat";
+    src: url("/fonts/Montserrat-ExtraLight.ttf") format("truetype");
+    font-weight: 200;
+  }
+
+  @font-face {
+    font-family: "Montserrat";
+    src: url("/fonts/Montserrat-Light.ttf") format("truetype");
+    font-weight: 300;
+  }
+
+  @font-face {
+    font-family: "Montserrat";
+    src: url("/fonts/Montserrat-Regular.ttf") format("truetype");
+    font-weight: 400;
+  }
+
+  @font-face {
+    font-family: "Montserrat";
+    src: url("/fonts/Montserrat-Medium.ttf") format("truetype");
+    font-weight: 500;
+  }
+
+  @font-face {
+    font-family: "Montserrat";
+    src: url("/fonts/Montserrat-SemiBold.ttf") format("truetype");
+    font-weight: 600;
+  }
+
+  @font-face {
+    font-family: "Montserrat";
+    src: url("/fonts/Montserrat-Bold.ttf") format("truetype");
+    font-weight: 700;
+  }
+
+  @font-face {
+    font-family: "Montserrat";
+    src: url("/fonts/Montserrat-ExtraBold.ttf") format("truetype");
+    font-weight: 800;
+  }
+
+  @font-face {
+    font-family: "Montserrat";
+    src: url("/fonts/Montserrat-Black.ttf") format("truetype");
+    font-weight: 900;
+  }
+
+  html {
+    background: var(--white-color);
+    font-family: "Montserrat", sans-serif;
+    color: var(--black-color);
+
+    /* background: #ffffff;
+    opacity: 0.9;
+    background-image: radial-gradient(#003df6 0.4px, transparent 0.4px),
+      radial-gradient(#003df6 0.4px, #ffffff 0.4px);
+    background-size: 1.5rem 1.5rem;
+    background-position:
+      0 0,
+      0.75rem 0.75rem; */
+  }
+
+  /* START OF CSS RESET June 2024 */
+
+  * {
+    margin: 0;
+    padding: 0;
+  }
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    min-height: 100dvh;
+  }
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    text-wrap: balance;
+  }
+
+  img,
+  video,
+  svg {
+    height: auto;
+    max-width: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+      transition: none;
+    }
+  }
+
+  /* END OF CSS RESET June 2024 */
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--primary-color);
+  }
+
+  body {
+    max-width: 800px;
+    margin: auto;
+    position: relative;
+  }
+
+  body::before {
+    content: "";
+    background-image: url("/images/logo-madrid-azul.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-size: 500px;
+    background-position: center;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    opacity: 0.02;
+    z-index: -1;
+  }
 </style>

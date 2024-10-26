@@ -1,0 +1,176 @@
+---
+import Header from "@components/Header.astro"
+import Layout from "@layouts/Layout.astro"
+import {
+  getGroupDetailsByCode,
+  getStandingsByGroupCode,
+} from "@services/standings"
+import { groupCode1, groupCode2, groupCodes } from "src/constants/common"
+import { STANDINGS_URL } from "src/constants/routes"
+
+export function getStaticPaths() {
+  return groupCodes.map((groupCode) => ({
+    params: { groupCode },
+  }))
+}
+
+const { groupCode } = Astro.params
+const { pathname } = Astro.url
+
+const standings = await getStandingsByGroupCode(parseInt(groupCode))
+---
+
+<Layout>
+  <main class="main">
+    <Header />
+    <h2 class="title">Clasificación</h2>
+    <header class="group-buttons-container">
+      <a
+        class={`group-button${pathname.includes(groupCode1) ? " active" : ""}`}
+        href={`${STANDINGS_URL}/${groupCode1}`}>Grupo 1</a
+      >
+      <a
+        class={`group-button${pathname.includes(groupCode2) ? " active" : ""}`}
+        href={`${STANDINGS_URL}/${groupCode2}`}>Grupo 2</a
+      >
+    </header>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>POS</th>
+            <th class="team">EQUIPO</th>
+            <th>PTS</th>
+            <th>PJ</th>
+            <th>PG</th>
+            <th>PE</th>
+            <th>PP</th>
+            <th>PF</th>
+            <th>PC</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            standings
+              .sort((a, b) => a.Posicion - b.Posicion)
+              .map((standing) => (
+                <tr>
+                  <td>{standing.Posicion}</td>
+                  <td class="team">{standing.Nombre_equipo}</td>
+                  <td>{standing.Puntos}</td>
+                  <td>{standing.Partidos_jugados}</td>
+                  <td>{standing.Partidos_ganados}</td>
+                  <td>{standing.Partidos_empatados}</td>
+                  <td>{standing.Partidos_perdidos}</td>
+                  <td>{standing.Goles_favor}</td>
+                  <td>{standing.Goles_contra}</td>
+                </tr>
+              ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .title {
+    margin-block: 1rem;
+  }
+
+  .group-buttons-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .group-button {
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--black-color);
+    border: 0.0625rem solid transparent;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    width: fit-content;
+
+    &.active {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+    }
+  }
+
+  .table-container {
+    overflow-x: auto;
+    width: 100%;
+    border-radius: 0.5rem;
+    border: 0.09375rem solid var(--primary-very-light-color);
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+
+    th,
+    td {
+      font-size: 0.875rem;
+      background: var(--white-color);
+      text-align: center;
+    }
+
+    th {
+      text-align: left;
+      padding: 0.7rem;
+    }
+
+    td {
+      padding: 0.6rem 0.5rem;
+    }
+
+    th:nth-child(1),
+    td:nth-child(1) {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+      position: sticky;
+      left: 2.7rem;
+      z-index: 2;
+    }
+
+    tr:nth-child(odd) {
+      td {
+        background: var(--primary-very-light-color);
+      }
+    }
+
+    tr:first-child {
+      background: var(--white-color);
+    }
+
+    .team {
+      font-size: 0.8rem;
+      text-align: left;
+    }
+
+    tr:hover {
+      cursor: pointer;
+
+      td {
+        background: var(--primary-color);
+        color: var(--white-color);
+      }
+    }
+  }
+</style>
