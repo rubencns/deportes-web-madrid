@@ -15,7 +15,7 @@ export const getGamesByGroupCode = async (code: number): Promise<Game[]> => {
   const filteredGames = await games.filter((game) =>
     game.Codigo_grupo === code)
 
-  return filteredGames as any
+  return filteredGames
 }
 
 export const getMatchDaysByGroupCode = async (code: number): Promise<MatchDayUI[]> => {
@@ -49,4 +49,14 @@ export const getNextMatchDayByGroupCode = async (code: number): Promise<MatchDay
   const nextMatchDay = gamesByGroupCode.find((game) => game.Jornada === currentMatchDay.Jornada + 1)
 
   return nextMatchDay as MatchDayUI
+}
+
+export const getTeamGamesByCode = async (code: number): Promise<Game[]> => {
+  const games = await getGames()
+  const teamGames = await games.filter((game) => {
+    const isTeamInGame = (game.Codigo_equipo1.toString() === code.toString() || game.Codigo_equipo2.toString() === code.toString())
+    return isTeamInGame
+  })
+
+  return teamGames
 }

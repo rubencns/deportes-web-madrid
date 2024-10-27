@@ -81,7 +81,7 @@ const isMatchDayOpen = (matchDay: MatchDayUI) => {
                             </span>
                           </p>
                         </td>
-                        {game.Jornada === currentMatchDay.Jornada && (
+                        {game.Estado === "F" && (
                           <td>
                             <p
                               class={`game-first-result${isHighestScore(game.Resultado1, game.Resultado2) ? " highest-score" : ""}`}

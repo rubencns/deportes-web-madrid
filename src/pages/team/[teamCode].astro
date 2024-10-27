@@ -1,0 +1,381 @@
+---
+import {
+  getStandingsByGroupCode,
+  getTeamStandingsByCode,
+  getJerseyColorByTeamCode,
+  getWinningStreakByTeamCode,
+  getResultsHistoryByTeamCode,
+  getStandings,
+} from "@services/standings"
+import { getTeamGamesByCode, getNextMatchDayByGroupCode } from "@services/games"
+import { courtInitials, groupCode1, groupCode2 } from "src/constants/common"
+import Layout from "@layouts/Layout.astro"
+import Header from "@components/Header.astro"
+import { colors } from "@constants/common"
+import JerseyFilledIcon from "@components/icons/JerseyFilledIcon.astro"
+import ChevronLeftIcon from "@components/icons/ChevronLeftIcon.astro"
+import { isHighestScore } from "@utils/isHighestScore"
+import { formatDate } from "@utils/formatDate"
+
+export async function getStaticPaths() {
+  const teamsGroup1 = await getStandingsByGroupCode(parseInt(groupCode1))
+  const teamsGroup2 = await getStandingsByGroupCode(parseInt(groupCode2))
+  const teams = [...teamsGroup1, ...teamsGroup2]
+
+  return teams.map((team) => ({
+    params: { teamCode: team.Codigo_equipo },
+  }))
+}
+
+const { teamCode } = Astro.params
+
+const teamStanding = await getTeamStandingsByCode(teamCode)
+const teamGames = await getTeamGamesByCode(teamCode)
+
+const nextMatchDayGame = await getNextMatchDayByGroupCode(
+  teamStanding?.Codigo_grupo || 0
+)
+const nextTeamGame = teamGames.find(
+  (game) => game.Jornada === nextMatchDayGame.Jornada
+)
+
+const jerseyColors = await getJerseyColorByTeamCode(teamCode)
+const hexColorsOfJerseys = jerseyColors.map((jerseyColor) => {
+  const color = colors.find((color) =>
+    jerseyColor.trim().toLocaleLowerCase().includes(color.name)
+  )
+
+  return color?.hex
+})
+
+const getJerseyColorByColorName = (jerseyColor: string) => {
+  const color = colors.find((color) =>
+    jerseyColor.trim().toLocaleLowerCase().includes(color.name)
+  )
+
+  return color?.hex
+}
+
+const groupName =
+  teamStanding?.Codigo_grupo.toString() === groupCode1.toString()
+    ? "Grupo 1"
+    : "Grupo 2"
+
+const winningStreak = await getWinningStreakByTeamCode(teamCode)
+const resultsHistory = await getResultsHistoryByTeamCode(teamCode)
+
+const standings = await getStandings()
+const getTeamStandings = (code: number) =>
+  standings.find((standing) => standing.Codigo_equipo === code)
+---
+
+<Layout>
+  <main class="main">
+    <Header />
+    <div class="section-team-heading">
+      <button class="go-back" onclick="history.back()"
+        ><ChevronLeftIcon width={20} height={20} /> Volver</button
+      >
+      <div class="section-team-heading-row">
+        <h2 style={{ color: hexColorsOfJerseys[0] }}>
+          {teamStanding?.Nombre_equipo}
+        </h2>
+        {
+          hexColorsOfJerseys.map((jerseyColor) => (
+            <JerseyFilledIcon color={jerseyColor} />
+          ))
+        }
+      </div>
+      <p class="position">{teamStanding?.Posicion}º en {groupName}</p>
+      <p class="team-streak">
+        Racha de victorias: {winningStreak}
+      </p>
+    </div>
+    <table
+      class="standings-table"
+      style={{ backgroundColor: hexColorsOfJerseys[0] }}
+    >
+      <thead>
+        <tr>
+          <th>PTS</th>
+          <th>PJ</th>
+          <th>PG</th>
+          <th>PE</th>
+          <th>PP</th>
+          <th>PF</th>
+          <th>PC</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{teamStanding?.Puntos}</td>
+          <td>{teamStanding?.Partidos_jugados}</td>
+          <td>{teamStanding?.Partidos_ganados}</td>
+          <td>{teamStanding?.Partidos_empatados}</td>
+          <td>{teamStanding?.Partidos_perdidos}</td>
+          <td>{teamStanding?.Goles_favor}</td>
+          <td>{teamStanding?.Goles_contra}</td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 class="section-title" style={{ color: hexColorsOfJerseys[0] }}>
+      Próximo partido
+    </h3>
+    {
+      nextTeamGame ? (
+        <article class="game-card next-game-card">
+          <header class="game-card-heading">
+            <p>Jornada {nextTeamGame?.Jornada}</p>
+            <p>
+              {formatDate(nextTeamGame.Fecha)}
+              {nextTeamGame.Hora}
+            </p>
+            <p>{nextTeamGame.Campo.split(courtInitials)[0]}</p>
+          </header>
+          <div class="game-card-wrapper">
+            <div class="game-card-teams">
+              <div
+                class={`game-card-team-wrapper${isHighestScore(nextTeamGame.Resultado1, nextTeamGame.Resultado2) ? " highest-score" : ""}`}
+              >
+                <div class="game-card-team-jersey">
+                  <JerseyFilledIcon
+                    color={getJerseyColorByColorName(
+                      nextTeamGame.Color_Camiseta_1
+                    )}
+                  />
+                </div>
+                <p>{nextTeamGame.Equipo_local}</p>
+                <span class="position-small">
+                  {` (${getTeamStandings(nextTeamGame.Codigo_equipo1)?.Posicion}º)`}
+                </span>
+              </div>
+              <div
+                class={`game-card-team-wrapper${isHighestScore(nextTeamGame.Resultado2, nextTeamGame.Resultado1) ? " highest-score" : ""}`}
+              >
+                <div class="game-card-team-jersey">
+                  <JerseyFilledIcon
+                    color={getJerseyColorByColorName(
+                      nextTeamGame.Color_Camiseta_2
+                    )}
+                  />
+                </div>
+                <p>{nextTeamGame.Equipo_visitante}</p>
+                <span class="position-small">
+                  {` (${getTeamStandings(nextTeamGame.Codigo_equipo2)?.Posicion}º)`}
+                </span>
+              </div>
+            </div>
+            {nextTeamGame.Estado === "F" && (
+              <div>
+                <p
+                  class={`game-first-result${isHighestScore(nextTeamGame.Resultado1, nextTeamGame.Resultado2) ? " highest-score" : ""}`}
+                >
+                  {nextTeamGame.Resultado1}
+                </p>
+                <p
+                  class={`${isHighestScore(nextTeamGame.Resultado2, nextTeamGame.Resultado1) ? " highest-score" : ""}`}
+                >
+                  {nextTeamGame.Resultado2}
+                </p>
+              </div>
+            )}
+          </div>
+        </article>
+      ) : (
+        <p>No hay partido próximo</p>
+      )
+    }
+    <h3 class="section-title" style={{ color: hexColorsOfJerseys[0] }}>
+      Jornadas
+    </h3>
+    <section class="game-list">
+      {
+        teamGames
+          .sort((a, b) => a.Jornada - b.Jornada)
+          .map((game) => (
+            <article class="game-card">
+              <header class="game-card-heading">
+                <p>Jornada {game.Jornada} </p>
+                <p>
+                  {formatDate(game.Fecha)} {game.Hora}
+                </p>
+                <p>{game.Campo.split(courtInitials)[0]}</p>
+              </header>
+              <div class="game-card-wrapper">
+                <div class="game-card-teams">
+                  <div
+                    class={`game-card-team-wrapper${isHighestScore(game.Resultado1, game.Resultado2) ? " highest-score" : ""}`}
+                  >
+                    <div class="game-card-team-jersey">
+                      <JerseyFilledIcon
+                        color={getJerseyColorByColorName(game.Color_Camiseta_1)}
+                      />
+                    </div>
+                    <p>{game.Equipo_local}</p>
+                    <span class="position-small">
+                      {` (${getTeamStandings(game.Codigo_equipo1)?.Posicion}º)`}
+                    </span>
+                  </div>
+                  <div
+                    class={`game-card-team-wrapper${isHighestScore(game.Resultado2, game.Resultado1) ? " highest-score" : ""}`}
+                  >
+                    <div class="game-card-team-jersey">
+                      <JerseyFilledIcon
+                        color={getJerseyColorByColorName(game.Color_Camiseta_2)}
+                      />
+                    </div>
+                    <p>{game.Equipo_visitante}</p>
+                    <span class="position-small">
+                      {` (${getTeamStandings(game.Codigo_equipo2)?.Posicion}º)`}
+                    </span>
+                  </div>
+                </div>
+                {game.Estado === "F" && (
+                  <div>
+                    <p
+                      class={`game-first-result${isHighestScore(game.Resultado1, game.Resultado2) ? " highest-score" : ""}`}
+                    >
+                      {game.Resultado1}
+                    </p>
+                    <p
+                      class={`${isHighestScore(game.Resultado2, game.Resultado1) ? " highest-score" : ""}`}
+                    >
+                      {game.Resultado2}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </article>
+          ))
+      }
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .section-team-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .go-back {
+    background: none;
+    border: none;
+    cursor: pointer;
+    align-self: flex-start;
+    color: var(--black-color);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+  }
+
+  .section-team-heading-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .section-title {
+    margin-bottom: 1rem;
+  }
+
+  .standings-table {
+    background: var(--primary-color);
+    margin-inline: -1rem;
+    padding-block: 0.5rem;
+    color: var(--white-color);
+    margin-bottom: 2rem;
+
+    th,
+    td {
+      text-align: center;
+      padding-block: 0.5rem;
+    }
+  }
+
+  .next-game-card {
+    margin-bottom: 2rem;
+  }
+
+  .game-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .game-card {
+    background: var(--white-color);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 0.0625rem solid var(--primary-light-color);
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.04);
+
+    .game-card-teams {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      .game-card-team-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.9rem;
+      }
+
+      .game-card-team-jersey {
+        width: 1rem;
+        height: 1rem;
+        border-radius: 0.25rem;
+        margin-right: 0.15rem;
+      }
+    }
+
+    .game-card-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+    }
+
+    .game-card-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .game-first-result {
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  .highest-score {
+    font-weight: 600;
+  }
+
+  .position {
+    font-size: 1rem;
+    margin-top: 0.25rem;
+  }
+
+  .position-small {
+    font-size: 0.75rem;
+  }
+
+  .team-streak {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+  }
+</style>

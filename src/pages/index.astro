@@ -10,6 +10,7 @@ import { groupCode1, groupCode2 } from "src/constants/common"
 import { courtInitials } from "@constants/common"
 import { isHighestScore } from "@utils/isHighestScore"
 import { getStandings } from "@services/standings"
+import { formatDate } from "@utils/formatDate"
 
 /* const filePath = path.join(process.cwd(), "/mock/clasificaciones_20241025.csv");
 const csvToString = await fs.readFile(filePath, "utf-8");
@@ -154,7 +155,7 @@ const nextMatchDayGamesOfGroup2 = gamesOfGroup2
               </p>
             </div>
             <div class="next-game-date">
-              <p>{game.Fecha}</p>·<p>{game.Hora}</p> -
+              <p>{formatDate(game.Fecha)}</p>·<p>{game.Hora}</p> -
               <p>{game.Campo.split(courtInitials)[0]}</p>
             </div>
           </article>
@@ -182,7 +183,7 @@ const nextMatchDayGamesOfGroup2 = gamesOfGroup2
               </p>
             </div>
             <div class="next-game-date">
-              <p>{game.Fecha}</p>·<p>{game.Hora}</p> -
+              <p>{formatDate(game.Fecha)}</p>·<p>{game.Hora}</p> -
               <p>{game.Campo.split(courtInitials)[0]}</p>
             </div>
           </article>

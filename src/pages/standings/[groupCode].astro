@@ -3,7 +3,7 @@ import Header from "@components/Header.astro"
 import Layout from "@layouts/Layout.astro"
 import { getStandingsByGroupCode } from "@services/standings"
 import { groupCode1, groupCode2, groupCodes } from "src/constants/common"
-import { STANDINGS_URL } from "src/constants/routes"
+import { STANDINGS_URL, TEAM_URL } from "src/constants/routes"
 
 export function getStaticPaths() {
   return groupCodes.map((groupCode) => ({
@@ -51,7 +51,9 @@ const standings = await getStandingsByGroupCode(parseInt(groupCode))
             standings
               .sort((a, b) => a.Posicion - b.Posicion)
               .map((standing) => (
-                <tr>
+                <tr
+                  onclick={`window.location="${TEAM_URL}/${standing.Codigo_equipo}"`}
+                >
                   <td>{standing.Posicion}</td>
                   <td class="team">{standing.Nombre_equipo}</td>
                   <td>{standing.Puntos}</td>
