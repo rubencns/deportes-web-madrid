@@ -62,12 +62,12 @@ const getTeamStandings = (code: number) =>
       game.Estado === "F" && (
         <div>
           <p
-            class={`game-first-result${isHighestScore(game.Resultado1, game.Resultado2) ? " highest-score" : ""}`}
+            class={`game-result game-first-result${isHighestScore(game.Resultado1, game.Resultado2) ? " highest-score" : ""}`}
           >
             {game.Resultado1}
           </p>
           <p
-            class={`${isHighestScore(game.Resultado2, game.Resultado1) ? " highest-score" : ""}`}
+            class={`game-result${isHighestScore(game.Resultado2, game.Resultado1) ? " highest-score" : ""}`}
           >
             {game.Resultado2}
           </p>
@@ -103,6 +103,7 @@ const getTeamStandings = (code: number) =>
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 1rem;
 
       .game-card-teams {
         display: flex;
@@ -130,6 +131,10 @@ const getTeamStandings = (code: number) =>
           border-radius: 0.25rem;
           margin-right: 0.15rem;
         }
+      }
+
+      .game-result {
+        text-align: right;
       }
 
       .game-first-result {
