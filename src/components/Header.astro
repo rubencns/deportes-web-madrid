@@ -1,8 +1,7 @@
 ---
-import { groupCode1 } from "src/constants/common"
-import { GAMES_URL, HOME_URL, STANDINGS_URL } from "src/constants/routes"
-import { Image } from "astro:assets"
-import BasketballIcon from "../assets/svgs/basketball-icon.svg"
+import { groupCode1 } from "@constants/common"
+import { GAMES_URL, HOME_URL, STANDINGS_URL } from "@constants/routes"
+import BasketballIcon from "@components/icons/BasketballIcon.astro"
 
 const { pathname } = Astro.url
 ---
@@ -10,13 +9,7 @@ const { pathname } = Astro.url
 <header>
   <div class="header-wrapper">
     <h5 class="title">Liga Municipal de Baloncesto Hortaleza</h5>
-    <Image
-      class="image"
-      src={BasketballIcon}
-      alt="Logo Madrid Azul"
-      width={30}
-      height={30}
-    />
+    <BasketballIcon width={30} height={30} />
   </div>
   <nav class="nav">
     <a class={pathname === HOME_URL ? "active" : ""} href={HOME_URL}>Inicio</a>
