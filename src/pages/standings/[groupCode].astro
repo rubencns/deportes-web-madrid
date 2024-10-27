@@ -1,10 +1,7 @@
 ---
 import Header from "@components/Header.astro"
 import Layout from "@layouts/Layout.astro"
-import {
-  getGroupDetailsByCode,
-  getStandingsByGroupCode,
-} from "@services/standings"
+import { getStandingsByGroupCode } from "@services/standings"
 import { groupCode1, groupCode2, groupCodes } from "src/constants/common"
 import { STANDINGS_URL } from "src/constants/routes"
 

@@ -24,3 +24,9 @@ export interface Standing {
 }
 
 export type gender = "MASCULINO" | "FEMENINO" | "MIXTO"
+
+export interface GroupDetailsUI {
+  Nombre_grupo: Standing['Nombre_grupo'],
+  Nombre_fase: Standing['Nombre_fase'],
+  Nombre_competicion: Standing['Nombre_competicion']
+}

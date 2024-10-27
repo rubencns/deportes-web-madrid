@@ -9,6 +9,7 @@ import {
 import { groupCode1, groupCode2 } from "src/constants/common"
 import { courtInitials } from "@constants/common"
 import { isHighestScore } from "@utils/isHighestScore"
+import { getStandings } from "@services/standings"
 
 /* const filePath = path.join(process.cwd(), "/mock/clasificaciones_20241025.csv");
 const csvToString = await fs.readFile(filePath, "utf-8");
@@ -30,6 +31,10 @@ const nextMatchDayOfGroup1 = await getNextMatchDayByGroupCode(
 const nextMatchDayOfGroup2 = await getNextMatchDayByGroupCode(
   parseInt(groupCode2)
 )
+
+const standings = await getStandings()
+const getTeamStandings = (code: number) =>
+  standings.find((standing) => standing.Codigo_equipo === code)
 
 const currentMatchDayGamesOfGroup1 = gamesOfGroup1
   .filter((game) => game.Jornada === currentMatchDayOfGroup1.Jornada)
@@ -59,6 +64,9 @@ const nextMatchDayGamesOfGroup2 = gamesOfGroup2
                 class={`team-name${isHighestScore(game.Resultado1, game.Resultado2) ? " highest-score" : ""}`}
               >
                 {game.Equipo_local}
+                <span class="position">
+                  {` (${getTeamStandings(game.Codigo_equipo1)?.Posicion}º)`}
+                </span>
               </p>
               <p
                 class={`score${isHighestScore(game.Resultado1, game.Resultado2) ? " highest-score" : ""}`}
@@ -77,6 +85,9 @@ const nextMatchDayGamesOfGroup2 = gamesOfGroup2
                 class={`team-name${isHighestScore(game.Resultado2, game.Resultado1) ? " highest-score" : ""}`}
               >
                 {game.Equipo_visitante}
+                <span class="position">
+                  ({getTeamStandings(game.Codigo_equipo2)?.Posicion}º)
+                </span>
               </p>
             </div>
           </article>
@@ -94,6 +105,9 @@ const nextMatchDayGamesOfGroup2 = gamesOfGroup2
                   class={`team-name${isHighestScore(game.Resultado1, game.Resultado2) ? " highest-score" : ""}`}
                 >
                   {game.Equipo_local}
+                  <span class="position">
+                    {` (${getTeamStandings(game.Codigo_equipo1)?.Posicion}º)`}
+                  </span>
                 </p>
                 <p
                   class={`score${isHighestScore(game.Resultado1, game.Resultado2) ? " highest-score" : ""}`}
@@ -112,6 +126,9 @@ const nextMatchDayGamesOfGroup2 = gamesOfGroup2
                   class={`team-name${isHighestScore(game.Resultado2, game.Resultado1) ? " highest-score" : ""}`}
                 >
                   {game.Equipo_visitante}
+                  <span class="position">
+                    {` (${getTeamStandings(game.Codigo_equipo2)?.Posicion}º)`}
+                  </span>
                 </p>
               </div>
             </>
@@ -126,9 +143,15 @@ const nextMatchDayGamesOfGroup2 = gamesOfGroup2
         nextMatchDayGamesOfGroup1.map((game) => (
           <article class="card next-game-card">
             <div class="next-game-teams">
-              <p class="next-game-team-name">{game.Equipo_local}</p>
+              <p class="next-game-team-name">
+                {game.Equipo_local}
+                <span class="position">{` (${getTeamStandings(game.Codigo_equipo1)?.Posicion}º)`}</span>
+              </p>
               <span class="game-separator">VS</span>
-              <p class="next-game-team-name">{game.Equipo_visitante}</p>
+              <p class="next-game-team-name">
+                {game.Equipo_visitante}
+                <span class="position">{` (${getTeamStandings(game.Codigo_equipo2)?.Posicion}º)`}</span>
+              </p>
             </div>
             <div class="next-game-date">
               <p>{game.Fecha}</p>·<p>{game.Hora}</p> -
@@ -144,9 +167,19 @@ const nextMatchDayGamesOfGroup2 = gamesOfGroup2
         nextMatchDayGamesOfGroup2.map((game) => (
           <article class="card next-game-card">
             <div class="next-game-teams">
-              <p class="next-game-team-name">{game.Equipo_local}</p>
+              <p class="next-game-team-name">
+                {game.Equipo_local}
+                <span class="position">
+                  {` (${getTeamStandings(game.Codigo_equipo1)?.Posicion}º)`}
+                </span>
+              </p>
               <span class="game-separator">VS</span>
-              <p class="next-game-team-name">{game.Equipo_visitante}</p>
+              <p class="next-game-team-name">
+                {game.Equipo_visitante}
+                <span class="position">
+                  {` (${getTeamStandings(game.Codigo_equipo2)?.Posicion}º)`}
+                </span>
+              </p>
             </div>
             <div class="next-game-date">
               <p>{game.Fecha}</p>·<p>{game.Hora}</p> -
@@ -253,5 +286,9 @@ const nextMatchDayGamesOfGroup2 = gamesOfGroup2
     color: var(--black-color);
     font-size: 1rem;
     margin-bottom: 0.75rem;
+  }
+
+  .position {
+    font-size: 0.6rem;
   }
 </style>

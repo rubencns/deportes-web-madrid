@@ -6,12 +6,12 @@ import {
   getMatchDaysByGroupCode,
   getCurrentMatchDayByGroupCode,
 } from "@services/games"
-import { getGroupDetailsByCode } from "@services/standings"
 import { groupCode1, groupCode2, groupCodes } from "src/constants/common"
 import { GAMES_URL } from "src/constants/routes"
 import type { MatchDayUI } from "@models/Game"
 import { courtInitials } from "@constants/common"
 import { isHighestScore } from "@utils/isHighestScore"
+import { getStandings } from "@services/standings"
 
 export function getStaticPaths() {
   return groupCodes.map((groupCode) => ({
@@ -23,9 +23,12 @@ const { pathname } = Astro.url
 const { groupCode } = Astro.params
 
 const games = await getGamesByGroupCode(parseInt(groupCode))
-const groupDetails = await getGroupDetailsByCode(parseInt(groupCode))
 const matchDays = await getMatchDaysByGroupCode(parseInt(groupCode))
 const currentMatchDay = await getCurrentMatchDayByGroupCode(parseInt(groupCode))
+
+const standings = await getStandings()
+const getTeamStandings = (code: number) =>
+  standings.find((standing) => standing.Codigo_equipo === code)
 
 const isMatchDayOpen = (matchDay: MatchDayUI) => {
   return matchDay.Jornada === currentMatchDay.Jornada
@@ -65,11 +68,17 @@ const isMatchDayOpen = (matchDay: MatchDayUI) => {
                             class={`${isHighestScore(game.Resultado1, game.Resultado2) ? " highest-score" : ""}`}
                           >
                             {game.Equipo_local}
+                            <span class="position">
+                              {` (${getTeamStandings(game.Codigo_equipo1)?.Posicion}º)`}
+                            </span>
                           </p>
                           <p
                             class={`${isHighestScore(game.Resultado2, game.Resultado1) ? " highest-score" : ""}`}
                           >
                             {game.Equipo_visitante}
+                            <span class="position">
+                              {` (${getTeamStandings(game.Codigo_equipo2)?.Posicion}º)`}
+                            </span>
                           </p>
                         </td>
                         {game.Jornada === currentMatchDay.Jornada && (
@@ -220,5 +229,9 @@ const isMatchDayOpen = (matchDay: MatchDayUI) => {
 
   .game-first-result {
     margin-bottom: 0.5rem;
+  }
+
+  .position {
+    font-size: 0.6rem;
   }
 </style>
