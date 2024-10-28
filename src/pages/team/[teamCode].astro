@@ -4,7 +4,6 @@ import {
   getTeamStandingsByCode,
   getJerseyColorByTeamCode,
   getWinningStreakByTeamCode,
-  getResultsHistoryByTeamCode,
   getStandings,
 } from "@services/standings"
 import { getTeamGamesByCode, getNextMatchDayByGroupCode } from "@services/games"
@@ -17,8 +16,8 @@ import ChevronLeftIcon from "@components/icons/ChevronLeftIcon.astro"
 import GameCard from "@components/GameCard.astro"
 
 export async function getStaticPaths() {
-  const teamsGroup1 = await getStandingsByGroupCode(parseInt(groupCode1))
-  const teamsGroup2 = await getStandingsByGroupCode(parseInt(groupCode2))
+  const teamsGroup1 = await getStandingsByGroupCode(groupCode1)
+  const teamsGroup2 = await getStandingsByGroupCode(groupCode2)
   const teams = [...teamsGroup1, ...teamsGroup2]
 
   return teams.map((team) => ({
@@ -32,7 +31,7 @@ const teamStanding = await getTeamStandingsByCode(teamCode)
 const teamGames = await getTeamGamesByCode(teamCode)
 
 const nextMatchDayGame = await getNextMatchDayByGroupCode(
-  teamStanding?.Codigo_grupo || 0
+  teamStanding?.Codigo_grupo || "0"
 )
 const nextTeamGame = teamGames.find(
   (game) => game.Jornada === nextMatchDayGame.Jornada
@@ -41,7 +40,7 @@ const nextTeamGame = teamGames.find(
 const jerseyColors = await getJerseyColorByTeamCode(teamCode)
 const hexColorsOfJerseys = jerseyColors.map((jerseyColor) => {
   const color = colors.find((color) =>
-    jerseyColor.trim().toLocaleLowerCase().includes(color.name)
+    jerseyColor?.trim().toLocaleLowerCase().includes(color.name)
   )
 
   return color?.hex
@@ -53,11 +52,6 @@ const groupName =
     : "Grupo 2"
 
 const winningStreak = await getWinningStreakByTeamCode(teamCode)
-const resultsHistory = await getResultsHistoryByTeamCode(teamCode)
-
-const standings = await getStandings()
-const getTeamStandings = (code: number) =>
-  standings.find((standing) => standing.Codigo_equipo === code)
 ---
 
 <Layout>
@@ -99,7 +93,7 @@ const getTeamStandings = (code: number) =>
       </thead>
       <tbody>
         <tr>
-          <td>{teamStanding?.Puntos}</td>
+          <td>{teamStanding && parseInt(teamStanding?.Puntos)}</td>
           <td>{teamStanding?.Partidos_jugados}</td>
           <td>{teamStanding?.Partidos_ganados}</td>
           <td>{teamStanding?.Partidos_empatados}</td>
@@ -127,7 +121,7 @@ const getTeamStandings = (code: number) =>
     <section class="game-list">
       {
         teamGames
-          .sort((a, b) => a.Jornada - b.Jornada)
+          .sort((a, b) => parseInt(a.Jornada) - parseInt(b.Jornada))
           .map((game) => <GameCard game={game} />)
       }
     </section>

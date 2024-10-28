@@ -22,12 +22,12 @@ export function getStaticPaths() {
 const { pathname } = Astro.url
 const { groupCode } = Astro.params
 
-const games = await getGamesByGroupCode(parseInt(groupCode))
-const matchDays = await getMatchDaysByGroupCode(parseInt(groupCode))
-const currentMatchDay = await getCurrentMatchDayByGroupCode(parseInt(groupCode))
+const games = await getGamesByGroupCode(groupCode)
+const matchDays = await getMatchDaysByGroupCode(groupCode)
+const currentMatchDay = await getCurrentMatchDayByGroupCode(groupCode)
 
 const standings = await getStandings()
-const getTeamStandings = (code: number) =>
+const getTeamStandings = (code: string) =>
   standings.find((standing) => standing.Codigo_equipo === code)
 
 const isMatchDayOpen = (matchDay: MatchDayUI) => {

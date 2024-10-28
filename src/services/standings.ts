@@ -1,43 +1,58 @@
-import standings from "@mock/standings-1.json";
 import type { GroupDetailsUI, Standing } from "@models/Standing";
 import { capitalizeFirstLetter } from "@utils/capitalizeFirstLetter";
 import { getTeamGamesByCode } from "./games";
 import type { Game } from "@models/Game";
+import { convertCsvToJson } from "@utils/convertCsvToJson";
+import standingsMock from "@mock/standings.json";
+import { standingsCsvUrl } from "@constants/common";
+import { getCsvByUrl } from "@services/csv";
 
 export const getStandings = async (): Promise<Standing[]> => {
-  return await standings.map(standing => ({
+  let standings: Standing[]
+
+  if (process.env.NODE_ENV === "development") {
+    console.log('dev')
+    standings = standingsMock as unknown as Standing[]
+  } else {
+    console.log('pro')
+    const csvData = await getCsvByUrl(standingsCsvUrl);
+    standings = await convertCsvToJson<Standing>(csvData);
+  }
+
+  return standings.map(standing => ({
     ...standing,
     Nombre_equipo: capitalizeFirstLetter(standing.Nombre_equipo),
   })) as Standing[]
 };
 
-export const getStandingsByGroupCode = async (code: number): Promise<Standing[]> => {
+export const getStandingsByGroupCode = async (code: string): Promise<Standing[]> => {
   const standings = await getStandings()
-  const filteredStandings = await standings.filter((standing) =>
+  console.log("standings", standings[0])
+  const filteredStandings = standings.filter((standing) =>
     standing.Codigo_grupo === code)
 
   return filteredStandings as any
 }
 
-export const getGroupDetailsByCode = async (code: number): Promise<Nullable<GroupDetailsUI>> => {
+export const getGroupDetailsByCode = async (code: string): Promise<Nullable<GroupDetailsUI>> => {
   const standings = await getStandingsByGroupCode(code)
 
   if (standings.length === 0) return null
 
   const { Nombre_grupo, Nombre_fase, Nombre_competicion } = standings[0]
-  return await { Nombre_grupo, Nombre_fase, Nombre_competicion }
+  return { Nombre_grupo, Nombre_fase, Nombre_competicion }
 }
 
-export const getTeamStandingsByCode = async (code: number): Promise<Nullable<Standing>> => {
+export const getTeamStandingsByCode = async (code: string): Promise<Nullable<Standing>> => {
   const standings = await getStandings()
-  const teamStandings = await standings.find((standing) => standing.Codigo_equipo.toString() === code.toString())
+  const teamStandings = standings.find((standing) => standing.Codigo_equipo.toString() === code.toString())
 
   if (!teamStandings) return null
 
   return teamStandings
 }
 
-export const getJerseyColorByTeamCode = async (teamCode: number): Promise<string[]> => {
+export const getJerseyColorByTeamCode = async (teamCode: string): Promise<string[]> => {
   const games = await getTeamGamesByCode(teamCode)
 
   const getTeamJerseyColorsInAllGames = games.map((game) => {
@@ -51,18 +66,16 @@ export const getJerseyColorByTeamCode = async (teamCode: number): Promise<string
   return teamJerseyColorsWithoutDuplicates
 }
 
-const isWinner = (game: Game, teamCode: number) => {
+const isWinner = (game: Game, teamCode: string) => {
   const winner = game.Resultado1 > game.Resultado2 ? game.Codigo_equipo1 : game.Codigo_equipo2
   const isWinnerTeam = winner.toString() === teamCode.toString()
 
   return isWinnerTeam
 }
 
-export const getWinningStreakByTeamCode = async (teamCode: number): Promise<number> => {
+export const getWinningStreakByTeamCode = async (teamCode: string): Promise<number> => {
   const games = await getTeamGamesByCode(teamCode)
-  const gamesFinished = games.filter((game) => game.Estado === "F").sort((a, b) => b.Jornada - a.Partido)
-
-
+  const gamesFinished = games.filter((game) => game.Estado === "F").sort((a, b) => parseInt(b.Jornada) - parseInt(a.Partido))
 
   let winningStreak = 0
   let isStreakFinished = false
@@ -75,7 +88,7 @@ export const getWinningStreakByTeamCode = async (teamCode: number): Promise<numb
   return winningStreak
 }
 
-export const getResultsHistoryByTeamCode = async (teamCode: number): Promise<("V" | "D")[]> => {
+export const getResultsHistoryByTeamCode = async (teamCode: string): Promise<("V" | "D")[]> => {
   const games = await getTeamGamesByCode(teamCode)
   const gamesFinished = games.filter((game) => game.Estado === "F")
 

@@ -7,51 +7,34 @@ import {
   getNextMatchDayByGroupCode,
 } from "@services/games"
 import { groupCode1, groupCode2 } from "src/constants/common"
-import { getStandings } from "@services/standings"
 import GameCard from "@components/GameCard.astro"
 
-/* const filePath = path.join(process.cwd(), "/mock/clasificaciones_20241025.csv");
-const csvToString = await fs.readFile(filePath, "utf-8");
-const json = await csv2json(csvToString);
-console.log("csv to json", json); */
+const gamesOfGroup1 = await getGamesByGroupCode(groupCode1)
+const gamesOfGroup2 = await getGamesByGroupCode(groupCode2)
 
-const gamesOfGroup1 = await getGamesByGroupCode(parseInt(groupCode1))
-const gamesOfGroup2 = await getGamesByGroupCode(parseInt(groupCode2))
-
-const currentMatchDayOfGroup1 = await getCurrentMatchDayByGroupCode(
-  parseInt(groupCode1)
-)
-const currentMatchDayOfGroup2 = await getCurrentMatchDayByGroupCode(
-  parseInt(groupCode2)
-)
-const nextMatchDayOfGroup1 = await getNextMatchDayByGroupCode(
-  parseInt(groupCode1)
-)
-const nextMatchDayOfGroup2 = await getNextMatchDayByGroupCode(
-  parseInt(groupCode2)
-)
-
-const standings = await getStandings()
-const getTeamStandings = (code: number) =>
-  standings.find((standing) => standing.Codigo_equipo === code)
+const currentMatchDayOfGroup1 = await getCurrentMatchDayByGroupCode(groupCode1)
+const currentMatchDayOfGroup2 = await getCurrentMatchDayByGroupCode(groupCode2)
+const nextMatchDayOfGroup1 = await getNextMatchDayByGroupCode(groupCode1)
+const nextMatchDayOfGroup2 = await getNextMatchDayByGroupCode(groupCode2)
 
 const currentMatchDayGamesOfGroup1 = gamesOfGroup1
   .filter((game) => game.Jornada === currentMatchDayOfGroup1.Jornada)
-  .sort((a, b) => a.Partido - b.Partido)
+  .sort((a, b) => parseInt(a.Partido) - parseInt(b.Partido))
 const currentMatchDayGamesOfGroup2 = gamesOfGroup2
   .filter((game) => game.Jornada === currentMatchDayOfGroup2.Jornada)
-  .sort((a, b) => a.Partido - b.Partido)
+  .sort((a, b) => parseInt(a.Partido) - parseInt(b.Partido))
 const nextMatchDayGamesOfGroup1 = gamesOfGroup1
   .filter((game) => game.Jornada === nextMatchDayOfGroup1.Jornada)
-  .sort((a, b) => a.Partido - b.Partido)
+  .sort((a, b) => parseInt(a.Partido) - parseInt(b.Partido))
 const nextMatchDayGamesOfGroup2 = gamesOfGroup2
   .filter((game) => game.Jornada === nextMatchDayOfGroup2.Jornada)
-  .sort((a, b) => a.Partido - b.Partido)
+  .sort((a, b) => parseInt(a.Partido) - parseInt(b.Partido))
 ---
 
 <Layout>
   <main class="main">
     <Header />
+    <!-- <button class="search-button">Buscar equipo</button> -->
     <h2 class="section-title">Últimos resultados</h2>
     <h3 class="group-name">Grupo 1</h3>
     <section class="cards-container">
@@ -95,6 +78,19 @@ const nextMatchDayGamesOfGroup2 = gamesOfGroup2
     flex-direction: column;
     justify-content: center;
     padding: 1rem;
+  }
+
+  .search-button {
+    background: var(--white-color);
+    color: var(--primary-color);
+    border: 0.0625rem solid var(--primary-color);
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    margin-top: 1rem;
+    margin-bottom: 0.75rem;
+    cursor: pointer;
   }
 
   .section-title {

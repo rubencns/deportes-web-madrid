@@ -1,3 +1,3 @@
-export const isHighestScore = (score: number, scoreToCompare: number) => {
-  return score > scoreToCompare
+export const isHighestScore = (score: string, scoreToCompare: string) => {
+  return parseInt(score) > parseInt(scoreToCompare)
 }

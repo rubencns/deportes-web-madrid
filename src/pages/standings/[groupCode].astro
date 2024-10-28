@@ -14,7 +14,7 @@ export function getStaticPaths() {
 const { groupCode } = Astro.params
 const { pathname } = Astro.url
 
-const standings = await getStandingsByGroupCode(parseInt(groupCode))
+const standings = await getStandingsByGroupCode(groupCode)
 ---
 
 <Layout>
@@ -49,14 +49,14 @@ const standings = await getStandingsByGroupCode(parseInt(groupCode))
         <tbody>
           {
             standings
-              .sort((a, b) => a.Posicion - b.Posicion)
+              .sort((a, b) => parseInt(a.Posicion) - parseInt(b.Posicion))
               .map((standing) => (
                 <tr
                   onclick={`window.location="${TEAM_URL}/${standing.Codigo_equipo}"`}
                 >
                   <td>{standing.Posicion}</td>
                   <td class="team">{standing.Nombre_equipo}</td>
-                  <td>{standing.Puntos}</td>
+                  <td>{parseInt(standing.Puntos)}</td>
                   <td>{standing.Partidos_jugados}</td>
                   <td>{standing.Partidos_ganados}</td>
                   <td>{standing.Partidos_empatados}</td>
