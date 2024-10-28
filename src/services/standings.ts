@@ -11,10 +11,8 @@ export const getStandings = async (): Promise<Standing[]> => {
   let standings: Standing[]
 
   if (process.env.NODE_ENV === "development") {
-    console.log('dev')
     standings = standingsMock as unknown as Standing[]
   } else {
-    console.log('pro')
     const csvData = await getCsvByUrl(standingsCsvUrl);
     standings = await convertCsvToJson<Standing>(csvData);
   }
@@ -27,7 +25,7 @@ export const getStandings = async (): Promise<Standing[]> => {
 
 export const getStandingsByGroupCode = async (code: string): Promise<Standing[]> => {
   const standings = await getStandings()
-  console.log("standings", standings[0])
+
   const filteredStandings = standings.filter((standing) =>
     standing.Codigo_grupo === code)
 

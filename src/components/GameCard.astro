@@ -16,7 +16,7 @@ interface Props {
 const { game, hideMatchDay = false, hideCourt = false }: Props = Astro.props
 
 const standings = await getStandings()
-const getTeamStandings = (code: number) =>
+const getTeamStandings = (code: string) =>
   standings.find((standing) => standing.Codigo_equipo === code)
 ---
 

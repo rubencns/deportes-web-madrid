@@ -9,7 +9,7 @@ export const getGames = async (): Promise<Game[]> => {
   let games: Game[]
 
   if (process.env.NODE_ENV === "development") {
-    games = gamesMock as Game[]
+    games = gamesMock as unknown as Game[]
   } else {
     const csvData = await getCsvByUrl(gamesCsvUrl);
     games = await convertCsvToJson<Game>(csvData);
