@@ -8,6 +8,7 @@ import {
 } from "@services/games"
 import { groupCode1, groupCode2 } from "src/constants/common"
 import GameCard from "@components/GameCard.astro"
+import Search from "@components/Search.astro"
 
 const gamesOfGroup1 = await getGamesByGroupCode(groupCode1)
 const gamesOfGroup2 = await getGamesByGroupCode(groupCode2)
@@ -34,7 +35,9 @@ const nextMatchDayGamesOfGroup2 = gamesOfGroup2
 <Layout>
   <main class="main">
     <Header />
-    <!-- <button class="search-button">Buscar equipo</button> -->
+    <section class="search">
+      <Search client:idle />
+    </section>
     <h2 class="section-title">Últimos resultados</h2>
     <h3 class="group-name">Grupo 1</h3>
     <section class="cards-container">
@@ -80,17 +83,8 @@ const nextMatchDayGamesOfGroup2 = gamesOfGroup2
     padding: 1rem;
   }
 
-  .search-button {
-    background: var(--white-color);
-    color: var(--primary-color);
-    border: 0.0625rem solid var(--primary-color);
-    font-size: 0.875rem;
-    font-weight: 600;
-    padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
-    margin-top: 1rem;
-    margin-bottom: 0.75rem;
-    cursor: pointer;
+  .search {
+    margin: 0.75rem 0 1rem;
   }
 
   .section-title {

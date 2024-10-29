@@ -1,0 +1,172 @@
+---
+import { groupCode1, groupCode2 } from "@constants/common"
+import { getStandingsByGroupCode } from "@services/standings"
+import SearchIcon from "./icons/SearchIcon.astro"
+import CloseIcon from "./icons/CloseIcon.astro"
+
+const teamsGroup1 = await getStandingsByGroupCode(groupCode1)
+const teamsGroup2 = await getStandingsByGroupCode(groupCode2)
+const teams = [...teamsGroup1, ...teamsGroup2]
+---
+
+<div class="search">
+  <input class="search-input" type="text" placeholder="Buscar equipo..." />
+  <div class="search-icon">
+    <SearchIcon width={20} height={20} color="#90acff" />
+  </div>
+  <div class="close-icon">
+    <CloseIcon color="#90acff" />
+  </div>
+  <div class="dropdown" id="dropdown" style="display: none;">
+    {
+      teams.map((team) => (
+        <a class="dropdown-item" href={`/team/${team.Codigo_equipo}`}>
+          {team.Nombre_equipo}
+        </a>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.querySelector(
+      ".search-input"
+    ) as HTMLInputElement
+    const dropdown = document.getElementById("dropdown")
+    const closeIcon = document.querySelector(".close-icon") as HTMLElement
+    closeIcon.style.display = "none"
+
+    if (!searchInput || !dropdown || !closeIcon) return
+
+    const dropdownItems = Array.from(dropdown.children) as HTMLElement[]
+
+    dropdownItems.forEach((item) => {
+      item.addEventListener("click", (event) => {
+        searchInput.value = ""
+        closeIcon.style.display = "none"
+      })
+    })
+
+    function updateDropdown() {
+      const query = searchInput.value.trim().toLowerCase()
+      let anyVisible = false
+
+      dropdownItems.forEach((item) => {
+        const teamName = item.textContent?.toLowerCase() || ""
+        const isVisible = teamName.includes(query)
+        item.style.display = isVisible ? "block" : "none"
+
+        if (isVisible) {
+          anyVisible = true
+        }
+      })
+
+      if (dropdown) dropdown.style.display = anyVisible ? "flex" : "none"
+    }
+
+    searchInput.addEventListener("focus", updateDropdown)
+
+    searchInput.addEventListener("input", () => {
+      closeIcon.style.display =
+        searchInput.value.trim() !== "" ? "flex" : "none"
+      updateDropdown()
+    })
+
+    document.addEventListener("mousedown", (event) => {
+      const target = event.target as Node
+      if (
+        !dropdown.contains(target) &&
+        target !== searchInput &&
+        !closeIcon.contains(target)
+      ) {
+        dropdown.style.display = "none"
+      }
+    })
+
+    closeIcon.addEventListener("click", () => {
+      searchInput.value = ""
+      closeIcon.style.display = "none"
+      updateDropdown()
+    })
+  })
+</script>
+
+<style>
+  .search {
+    position: relative;
+    max-width: 40rem;
+  }
+
+  .search-input {
+    padding: 0.75rem 2.5rem;
+    border-radius: 0.5rem;
+    border: 0.0625rem solid var(--primary-light-color);
+    width: 100%;
+    position: relative;
+
+    &:focus {
+      outline-color: var(--primary-color);
+    }
+
+    &::placeholder {
+      color: #90acff;
+    }
+  }
+
+  .search-icon {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0.75rem;
+    margin: auto;
+    display: grid;
+    place-items: center;
+  }
+
+  .close-icon {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0.75rem;
+    margin: auto;
+    display: grid;
+    place-items: center;
+  }
+
+  .dropdown {
+    position: absolute;
+    top: 3.2rem;
+    left: 0;
+    background: var(--white-color);
+    border: 0.0625rem solid var(--primary-very-light-color);
+    border-radius: 0.5rem;
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-height: 20rem;
+    overflow: auto;
+  }
+
+  .dropdown-item {
+    text-decoration: none;
+    padding: 1rem;
+    color: var(--black-color);
+
+    &:hover {
+      background: var(--primary-color);
+      color: var(--white-color);
+    }
+
+    &:first-child {
+      border-top-left-radius: 0.5rem;
+      border-top-right-radius: 0.5rem;
+    }
+
+    &:last-child {
+      border-bottom-left-radius: 0.5rem;
+      border-bottom-right-radius: 0.5rem;
+    }
+  }
+</style>
