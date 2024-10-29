@@ -29,7 +29,7 @@ export const getStandingsByGroupCode = async (code: string): Promise<Standing[]>
   const filteredStandings = standings.filter((standing) =>
     standing.Codigo_grupo === code)
 
-  return filteredStandings as any
+  return filteredStandings
 }
 
 export const getGroupDetailsByCode = async (code: string): Promise<Nullable<GroupDetailsUI>> => {

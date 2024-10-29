@@ -1,8 +1,9 @@
 ---
 import { groupCode1, groupCode2 } from "@constants/common"
 import { getStandingsByGroupCode } from "@services/standings"
-import SearchIcon from "./icons/SearchIcon.astro"
-import CloseIcon from "./icons/CloseIcon.astro"
+import SearchIcon from "@components/icons/SearchIcon.astro"
+import CloseIcon from "@components/icons/CloseIcon.astro"
+import { TEAM_URL } from "@constants/routes"
 
 const teamsGroup1 = await getStandingsByGroupCode(groupCode1)
 const teamsGroup2 = await getStandingsByGroupCode(groupCode2)
@@ -20,7 +21,7 @@ const teams = [...teamsGroup1, ...teamsGroup2]
   <div class="dropdown" id="dropdown" style="display: none;">
     {
       teams.map((team) => (
-        <a class="dropdown-item" href={`/team/${team.Codigo_equipo}`}>
+        <a class="dropdown-item" href={`${TEAM_URL}/${team.Codigo_equipo}`}>
           {team.Nombre_equipo}
         </a>
       ))
