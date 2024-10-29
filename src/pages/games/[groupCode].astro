@@ -33,6 +33,10 @@ const getTeamStandings = (code: string) =>
 const isMatchDayOpen = (matchDay: MatchDayUI) => {
   return matchDay.Jornada === currentMatchDay.Jornada
 }
+
+const isNextMatchDayOpen = (matchDay: MatchDayUI) => {
+  return parseInt(matchDay.Jornada) === parseInt(currentMatchDay.Jornada) + 1
+}
 ---
 
 <Layout>
@@ -52,7 +56,9 @@ const isMatchDayOpen = (matchDay: MatchDayUI) => {
     <div class="games-container">
       {
         matchDays.map((matchDay) => (
-          <details open={isMatchDayOpen(matchDay)}>
+          <details
+            open={isMatchDayOpen(matchDay) || isNextMatchDayOpen(matchDay)}
+          >
             <summary>
               Jornada {matchDay.Nombre_jornada} - {matchDay.Fecha}
             </summary>

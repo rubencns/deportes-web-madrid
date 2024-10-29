@@ -59,7 +59,8 @@ export const getCurrentMatchDayByGroupCode = async (code: string): Promise<Match
 export const getNextMatchDayByGroupCode = async (code: string): Promise<MatchDayUI> => {
   const gamesByGroupCode = await getGamesByGroupCode(code)
   const currentMatchDay = await getCurrentMatchDayByGroupCode(code)
-  const nextMatchDay = gamesByGroupCode.find((game) => game.Jornada === currentMatchDay.Jornada + 1)
+
+  const nextMatchDay = gamesByGroupCode.find((game) => parseInt(game.Jornada) === parseInt(currentMatchDay.Jornada) + 1)
 
   return nextMatchDay as MatchDayUI
 }
