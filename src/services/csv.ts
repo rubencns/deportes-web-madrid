@@ -1,4 +1,4 @@
-import { gamesCsvUrl, standingsCsvUrl } from "@constants/common";
+import { competitionCode, gamesCsvUrl, standingsCsvUrl } from "@constants/common";
 import type { Game } from "@models/Game";
 import type { Standing } from "@models/Standing";
 import { convertCsvToJson } from "@utils/convertCsvToJson";
@@ -28,7 +28,9 @@ const generateGamesJsonFile = async () => {
   const csvData = await getCsvByUrl(gamesCsvUrl);
   const games = await convertCsvToJson<Game>(csvData);
 
-  const gamesJson = JSON.stringify(games, null, 2);
+  const filteredGamesByCompetition = games.filter((game) => game.Codigo_competicion.trim() === competitionCode)
+
+  const gamesJson = JSON.stringify(filteredGamesByCompetition, null, 2);
 
   await fs.writeFile(gamesJsonPath, gamesJson);
 }
@@ -37,7 +39,9 @@ const generateStandingsJsonFile = async () => {
   const csvData = await getCsvByUrl(standingsCsvUrl);
   const standings = await convertCsvToJson<Standing>(csvData);
 
-  const standingsJson = JSON.stringify(standings, null, 2);
+  const filteredStandingsByCompetition = standings.filter((standing) => standing.Codigo_competicion.trim() === competitionCode)
+
+  const standingsJson = JSON.stringify(filteredStandingsByCompetition, null, 2);
 
   await fs.writeFile(standingsJsonPath, standingsJson);
 }

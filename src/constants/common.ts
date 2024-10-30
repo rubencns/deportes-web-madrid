@@ -1,6 +1,7 @@
 export const standingsCsvUrl = "https://datos.madrid.es/egob/catalogo/211549-1-juegos-deportivos-actual.csv"
 export const gamesCsvUrl = "https://datos.madrid.es/egob/catalogo/211549-3-juegos-deportivos-actual.csv"
 
+export const competitionCode = '8859'
 export const groupCode1 = '24203'
 export const groupCode2 = '24204'
 
