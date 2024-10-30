@@ -46,6 +46,7 @@ const teams = [...teamsGroup1, ...teamsGroup2]
       item.addEventListener("click", (event) => {
         searchInput.value = ""
         closeIcon.style.display = "none"
+        dropdown.style.display = "none"
       })
     })
 
@@ -96,7 +97,7 @@ const teams = [...teamsGroup1, ...teamsGroup2]
 <style>
   .search {
     position: relative;
-    max-width: 40rem;
+    max-width: 28rem;
   }
 
   .search-input {
