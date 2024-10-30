@@ -46,7 +46,7 @@ const generateStandingsJsonFile = async () => {
   await fs.writeFile(standingsJsonPath, standingsJson);
 }
 
-export async function runPreBuildTasks() {
+async function runPreBuildTasks() {
   try {
     await generateGamesJsonFile();
     await generateStandingsJsonFile();
