@@ -18,7 +18,7 @@ const teams = [...teamsGroup1, ...teamsGroup2]
   <div class="close-icon">
     <CloseIcon color="#90acff" />
   </div>
-  <div class="dropdown" id="dropdown" style="display: none;">
+  <div class="dropdown" style="display: none;">
     {
       teams.map((team) => (
         <a class="dropdown-item" href={`${TEAM_URL}/${team.Codigo_equipo}`}>
@@ -34,19 +34,16 @@ const teams = [...teamsGroup1, ...teamsGroup2]
     const searchInput = document.querySelector(
       ".search-input"
     ) as HTMLInputElement
-    const dropdown = document.getElementById("dropdown")
+    const dropdown = document.querySelector(".dropdown") as HTMLElement
     const closeIcon = document.querySelector(".close-icon") as HTMLElement
-    closeIcon.style.display = "none"
 
     if (!searchInput || !dropdown || !closeIcon) return
 
     const dropdownItems = Array.from(dropdown.children) as HTMLElement[]
 
     dropdownItems.forEach((item) => {
-      item.addEventListener("click", (event) => {
+      item.addEventListener("click", () => {
         searchInput.value = ""
-        closeIcon.style.display = "none"
-        dropdown.style.display = "none"
       })
     })
 
@@ -71,7 +68,7 @@ const teams = [...teamsGroup1, ...teamsGroup2]
 
     searchInput.addEventListener("input", () => {
       closeIcon.style.display =
-        searchInput.value.trim() !== "" ? "flex" : "none"
+        searchInput.value.trim() !== "" ? "grid" : "none"
       updateDropdown()
     })
 
@@ -132,7 +129,7 @@ const teams = [...teamsGroup1, ...teamsGroup2]
     bottom: 0;
     right: 0.75rem;
     margin: auto;
-    display: grid;
+    display: none;
     place-items: center;
   }
 
@@ -144,7 +141,7 @@ const teams = [...teamsGroup1, ...teamsGroup2]
     border: 0.0625rem solid var(--primary-very-light-color);
     border-radius: 0.5rem;
     box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.04);
-    display: flex;
+    display: none;
     flex-direction: column;
     width: 100%;
     max-height: 20rem;
