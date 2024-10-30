@@ -44,6 +44,7 @@ const teams = [...teamsGroup1, ...teamsGroup2]
     dropdownItems.forEach((item) => {
       item.addEventListener("click", () => {
         searchInput.value = ""
+        dropdown.style.display = "none"
       })
     })
 

@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
+    "prebuild": "tsx src/services/csv.ts",
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro"
@@ -12,10 +13,10 @@
   "dependencies": {
     "@astrojs/check": "^0.9.4",
     "astro": "^4.16.7",
-    "csv-parser": "^3.0.0",
-    "typescript": "^5.6.3"
+    "csv-parser": "^3.0.0"
   },
   "devDependencies": {
-    "@types/node": "^22.8.1"
+    "@types/node": "^22.8.4",
+    "tsx": "^4.19.2"
   }
 }

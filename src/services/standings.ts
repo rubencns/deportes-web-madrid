@@ -2,21 +2,11 @@ import type { GroupDetailsUI, Standing } from "@models/Standing";
 import { capitalizeFirstLetter } from "@utils/capitalizeFirstLetter";
 import { getTeamGamesByCode } from "./games";
 import type { Game } from "@models/Game";
-import { convertCsvToJson } from "@utils/convertCsvToJson";
-import standingsMock from "@mock/standings.json";
-import { standingsCsvUrl } from "@constants/common";
-import { getCsvByUrl } from "@services/csv";
+import rawStandings from "@database/standings.json";
+
+const standings = rawStandings as unknown as Standing[];
 
 export const getStandings = async (): Promise<Standing[]> => {
-  let standings: Standing[]
-
-  if (process.env.NODE_ENV === "development") {
-    standings = standingsMock as unknown as Standing[]
-  } else {
-    const csvData = await getCsvByUrl(standingsCsvUrl);
-    standings = await convertCsvToJson<Standing>(csvData);
-  }
-
   return standings.map(standing => ({
     ...standing,
     Nombre_equipo: capitalizeFirstLetter(standing.Nombre_equipo),

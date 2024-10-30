@@ -11,7 +11,8 @@
       "@mock/*": ["src/mock/*"],
       "@constants/*": ["src/constants/*"],
       "@utils/*": ["src/utils/*"],
-      "@assets/*": ["src/assets/*"]
+      "@assets/*": ["src/assets/*"],
+      "@database/*": ["src/database/*"]
     }
-  },
+  }
 }

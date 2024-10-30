@@ -1,20 +1,10 @@
 import type { Game, MatchDayUI } from "@models/Game";
 import { capitalizeFirstLetter } from "@utils/capitalizeFirstLetter";
-import gamesMock from "@mock/games.json";
-import { gamesCsvUrl } from "@constants/common";
-import { convertCsvToJson } from "@utils/convertCsvToJson";
-import { getCsvByUrl } from "@services/csv";
+import rawGames from "@database/games.json";
+
+const games = rawGames as unknown as Game[];
 
 export const getGames = async (): Promise<Game[]> => {
-  let games: Game[]
-
-  if (process.env.NODE_ENV === "development") {
-    games = gamesMock as unknown as Game[]
-  } else {
-    const csvData = await getCsvByUrl(gamesCsvUrl);
-    games = await convertCsvToJson<Game>(csvData);
-  }
-
   return games.map(game => ({
     ...game,
     Equipo_local: capitalizeFirstLetter(game.Equipo_local),

@@ -1,4 +1,14 @@
-export const getCsvByUrl = async (url: string) => {
+import { gamesCsvUrl, standingsCsvUrl } from "@constants/common";
+import type { Game } from "@models/Game";
+import type { Standing } from "@models/Standing";
+import { convertCsvToJson } from "@utils/convertCsvToJson";
+import fs from "fs/promises";
+import path from "path";
+
+const gamesJsonPath = path.join(process.cwd(), "/src/database/games.json");
+const standingsJsonPath = path.join(process.cwd(), "/src/database/standings.json");
+
+const getCsvByUrl = async (url: string) => {
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -13,3 +23,34 @@ export const getCsvByUrl = async (url: string) => {
     throw error;
   }
 };
+
+const generateGamesJsonFile = async () => {
+  const csvData = await getCsvByUrl(gamesCsvUrl);
+  const games = await convertCsvToJson<Game>(csvData);
+
+  const gamesJson = JSON.stringify(games, null, 2);
+
+  await fs.writeFile(gamesJsonPath, gamesJson);
+}
+
+const generateStandingsJsonFile = async () => {
+  const csvData = await getCsvByUrl(standingsCsvUrl);
+  const standings = await convertCsvToJson<Standing>(csvData);
+
+  const standingsJson = JSON.stringify(standings, null, 2);
+
+  await fs.writeFile(standingsJsonPath, standingsJson);
+}
+
+async function runPreBuildTasks() {
+  try {
+    await generateGamesJsonFile();
+    await generateStandingsJsonFile();
+    console.log("Database files generated successfully!");
+  } catch (error) {
+    console.error("Failed to generate database files:", error);
+    process.exit(1);
+  }
+}
+
+runPreBuildTasks();
