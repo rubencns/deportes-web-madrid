@@ -12,6 +12,7 @@ import type { MatchDayUI } from "@models/Game"
 import { courtInitials } from "@constants/common"
 import { isHighestScore } from "@utils/isHighestScore"
 import { getStandings } from "@services/standings"
+import { formatDate } from "@utils/formatDate"
 
 export function getStaticPaths() {
   return groupCodes.map((groupCode) => ({
@@ -60,7 +61,7 @@ const isNextMatchDayOpen = (matchDay: MatchDayUI) => {
             open={isMatchDayOpen(matchDay) || isNextMatchDayOpen(matchDay)}
           >
             <summary>
-              Jornada {matchDay.Nombre_jornada} - {matchDay.Fecha}
+              Jornada {matchDay.Nombre_jornada} - {formatDate(matchDay.Fecha)}
             </summary>
             <div class="game-list-container">
               <table class="game-list">
