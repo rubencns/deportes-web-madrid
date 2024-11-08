@@ -1,14 +1,14 @@
 ---
 const currentDate = new Date()
-
-const lastUpdated = currentDate.toLocaleString("es-ES", {
+const lastUpdated = new Intl.DateTimeFormat("es-ES", {
+  timeZone: "Europe/Madrid",
   day: "2-digit",
   month: "2-digit",
   year: "numeric",
   hour: "2-digit",
   minute: "2-digit",
   hour12: false,
-})
+}).format(currentDate)
 ---
 
 <!doctype html>
@@ -45,24 +45,29 @@ const lastUpdated = currentDate.toLocaleString("es-ES", {
     font-family: "Montserrat";
     src: url("/fonts/Montserrat-Regular.woff2") format("woff2");
     font-weight: 400;
+    font-display: swap;
   }
 
   @font-face {
     font-family: "Montserrat";
     src: url("/fonts/Montserrat-Medium.woff2") format("woff2");
     font-weight: 500;
+    font-display: swap;
+    font-display:;
   }
 
   @font-face {
     font-family: "Montserrat";
     src: url("/fonts/Montserrat-SemiBold.woff2") format("woff2");
     font-weight: 600;
+    font-display: swap;
   }
 
   @font-face {
     font-family: "Montserrat";
     src: url("/fonts/Montserrat-Bold.woff2") format("woff2");
     font-weight: 700;
+    font-display: swap;
   }
 
   html {
@@ -152,7 +157,7 @@ const lastUpdated = currentDate.toLocaleString("es-ES", {
 
   body::before {
     content: "";
-    background-image: url("/images/background-image.jpg");
+    background-image: url("/images/background-image.webp");
     background-size: contain;
     background-repeat: no-repeat;
     background-size: 500px;
