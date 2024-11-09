@@ -1,5 +1,5 @@
 import type { Game, MatchDayUI } from "@models/Game"
-import { capitalizeFirstLetter } from "@utils/capitalizeFirstLetter"
+import { capitalizeFirstLetterOfEachWord } from "@utils/capitalizeLetters"
 import rawGames from "@database/games.json"
 
 const games = rawGames as unknown as Game[]
@@ -7,8 +7,8 @@ const games = rawGames as unknown as Game[]
 export const getGames = async (): Promise<Game[]> => {
   return games.map((game) => ({
     ...game,
-    Equipo_local: capitalizeFirstLetter(game.Equipo_local),
-    Equipo_visitante: capitalizeFirstLetter(game.Equipo_visitante),
+    Equipo_local: capitalizeFirstLetterOfEachWord(game.Equipo_local),
+    Equipo_visitante: capitalizeFirstLetterOfEachWord(game.Equipo_visitante),
   }))
 }
 

@@ -13,6 +13,7 @@ import { courtInitials } from "@constants/common"
 import { isHighestScore } from "@utils/isHighestScore"
 import { getStandings } from "@services/standings"
 import { formatDate } from "@utils/formatDate"
+import { formatCourt } from "@utils/formatCourt"
 
 export function getStaticPaths() {
   return groupCodes.map((groupCode) => ({
@@ -103,7 +104,7 @@ const isNextMatchDayOpen = (matchDay: MatchDayUI) => {
                           </td>
                         )}
                         <td>{game.Hora}</td>
-                        <td>{game.Campo.split(courtInitials)[0]}</td>
+                        <td>{formatCourt(game.Campo)}</td>
                       </tr>
                     ))}
                 </tbody>

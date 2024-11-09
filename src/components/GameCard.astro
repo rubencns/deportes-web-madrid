@@ -6,6 +6,7 @@ import { getJerseyColorByColorName } from "@utils/getJerseyColor"
 import { isHighestScore } from "@utils/isHighestScore"
 import JerseyFilledIcon from "@components/icons/JerseyFilledIcon.astro"
 import type { Game } from "@models/Game"
+import { formatCourt } from "@utils/formatCourt"
 
 interface Props {
   game: Game
@@ -27,7 +28,7 @@ const getTeamStandings = (code: string) =>
       {formatDate(game.Fecha)}
       <span>{game.Hora}</span>
     </p>
-    {!hideCourt && <p>{game.Campo.split(courtInitials)[0]}</p>}
+    {!hideCourt && <p>{formatCourt(game.Campo)}</p>}
   </header>
   <div class="game-card-wrapper">
     <div class="game-card-teams">

@@ -1,5 +1,5 @@
 import type { GroupDetailsUI, Standing } from "@models/Standing"
-import { capitalizeFirstLetter } from "@utils/capitalizeFirstLetter"
+import { capitalizeFirstLetterOfEachWord } from "@utils/capitalizeLetters"
 import { getTeamGamesByCode } from "./games"
 import type { Game } from "@models/Game"
 import rawStandings from "@database/standings.json"
@@ -9,7 +9,7 @@ const standings = rawStandings as unknown as Standing[]
 export const getStandings = async (): Promise<Standing[]> => {
   return standings.map((standing) => ({
     ...standing,
-    Nombre_equipo: capitalizeFirstLetter(standing.Nombre_equipo),
+    Nombre_equipo: capitalizeFirstLetterOfEachWord(standing.Nombre_equipo),
   }))
 }
 
