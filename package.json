@@ -6,7 +6,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "prebuild": "tsx src/services/csv.ts",
-    "build": "astro check && astro build",
+    "build": "astro check && npm run prebuild && astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
