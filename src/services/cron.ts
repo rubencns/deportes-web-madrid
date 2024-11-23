@@ -19,7 +19,7 @@ export default async function handler(req: Request, res: Response) {
       })
 
       if (response.ok) {
-        res.status(200).json({ message: "Deployment triggered successfully" })
+        res.status(200).json({ message: "Deployment triggered successfully!" })
       } else {
         const error = await response.json()
         res
