@@ -1,0 +1,14 @@
+name: Scheduled redeployment for database update
+
+on:
+  schedule:
+    - cron: '*/5 * * * *' # Ejecuta cada 5 minutos
+
+jobs:
+  curl_request:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Execute curl POST
+      run: |
+        curl -X POST https://api.vercel.com/v1/integrations/deploy/prj_UsBxg4nHTtpZZJ9NNnBJrhs3thBX/B9iPUdxZlv
