@@ -9,6 +9,7 @@ const lastUpdated = new Intl.DateTimeFormat("es-ES", {
   minute: "2-digit",
   hour12: false,
 }).format(currentDate)
+import { ViewTransitions } from "astro:transitions"
 ---
 
 <!doctype html>
@@ -22,15 +23,16 @@ const lastUpdated = new Intl.DateTimeFormat("es-ES", {
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <meta name="generator" content={Astro.generator} />
     <title>Liga Municipal de Baloncesto Hortaleza</title>
+    <ViewTransitions />
   </head>
   <body>
     <slot />
+    <footer>
+      <p class="footer-content">Origen de los datos: Ayuntamiento de Madrid</p>
+      <p class="footer-content">Última actualización: {lastUpdated}</p>
+      <p class="footer-content-small">Hecho por Rubén 🏀</p>
+    </footer>
   </body>
-  <footer>
-    <p class="footer-content">Origen de los datos: Ayuntamiento de Madrid</p>
-    <p class="footer-content">Última actualización: {lastUpdated}</p>
-    <p class="footer-content-small">Hecho por Rubén 🏀</p>
-  </footer>
 </html>
 <style is:global>
   :root {
