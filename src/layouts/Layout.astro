@@ -1,5 +1,6 @@
 ---
 import { ViewTransitions } from "astro:transitions"
+import Analytics from "@vercel/analytics/astro"
 
 const currentDate = new Date()
 const lastUpdated = new Intl.DateTimeFormat("es-ES", {
@@ -24,6 +25,7 @@ const lastUpdated = new Intl.DateTimeFormat("es-ES", {
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <meta name="generator" content={Astro.generator} />
     <title>Liga Municipal de Baloncesto Hortaleza</title>
+    <Analytics />
     <ViewTransitions />
   </head>
   <body>
