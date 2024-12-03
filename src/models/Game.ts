@@ -1,36 +1,36 @@
 export interface Game {
-  Codigo_temporada: string,
-  Codigo_competicion: string,
-  Codigo_fase: string,
-  Codigo_grupo: string,
-  Jornada: string,
-  Partido: string,
-  Codigo_equipo1: string,
-  Codigo_equipo2: string,
-  Resultado1: string,
-  Resultado2: string,
-  Codigo_campo: string,
-  Fecha: `${string}-${string}-${string}`, // YYYY-MM-DD
-  Hora: `${string}:${string}`, // HH:MM
-  Programado: Scheduled,
-  Estado: GameStatus,
-  Nombre_temporada: `${string}/${string}`, // YYYY/YYYY
-  Nombre_competicion: string,
-  Nombre_fase: string,
-  Nombre_grupo: string,
-  Nombre_deporte: string,
-  Nombre_categoria: string,
-  Nombre_jornada: string,
-  Equipo_local: string,
-  Equipo_visitante: string,
-  Campo: string,
-  Sexo_grupo: "M" | "F",
-  Distrito: string,
-  Observaciones: string,
-  SISTEMA_COMPETICION: string,
-  COORD_X_CAMPO: string,
-  COORD_Y_CAMPO: string,
-  Color_Camiseta_1: string,
+  Codigo_temporada: string
+  Codigo_competicion: string
+  Codigo_fase: string
+  Codigo_grupo: string
+  Jornada: string
+  Partido: string
+  Codigo_equipo1: string
+  Codigo_equipo2: string
+  Resultado1: string
+  Resultado2: string
+  Codigo_campo: string
+  Fecha: `${string}-${string}-${string}` // YYYY-MM-DD
+  Hora: `${string}:${string}` // HH:MM
+  Programado: Scheduled
+  Estado: GameStatus
+  Nombre_temporada: `${string}/${string}` // YYYY/YYYY
+  Nombre_competicion: string
+  Nombre_fase: string
+  Nombre_grupo: string
+  Nombre_deporte: string
+  Nombre_categoria: string
+  Nombre_jornada: string
+  Equipo_local: string
+  Equipo_visitante: string
+  Campo: string
+  Sexo_grupo: "M" | "F"
+  Distrito: string
+  Observaciones: string
+  SISTEMA_COMPETICION: string
+  COORD_X_CAMPO: string
+  COORD_Y_CAMPO: string
+  Color_Camiseta_1: string
   Color_Camiseta_2: string
 }
 
@@ -58,7 +58,7 @@ asignado fecha, hora y campo. */
 export type Scheduled = 1
 
 export interface MatchDayUI {
-  Jornada: string,
-  Nombre_jornada: string,
-  Fecha: `${string}-${string}-${string}`, // YYYY-MM-DD
+  Jornada: string
+  Nombre_jornada: string
+  Fecha: `${string}-${string}-${string}` // YYYY-MM-DD
 }

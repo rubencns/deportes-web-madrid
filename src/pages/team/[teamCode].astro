@@ -71,9 +71,11 @@ const winningStreak = await getWinningStreakByTeamCode(teamCode)
         }
       </div>
       <p class="position">{teamStanding?.Posicion}º en {groupName}</p>
+      <!-- 
+      Está mal la lógica, no se muesta la racha de victorias correcta
       <p class="team-streak">
         Racha de victorias: {winningStreak}
-      </p>
+      </p> -->
     </div>
     <table
       class="standings-table"

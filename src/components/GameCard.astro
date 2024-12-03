@@ -4,20 +4,36 @@ import { formatDate } from "@utils/formatDate"
 import { getJerseyColorByColorName } from "@utils/getJerseyColor"
 import { isHighestScore } from "@utils/isHighestScore"
 import JerseyFilledIcon from "@components/icons/JerseyFilledIcon.astro"
-import type { Game } from "@models/Game"
+import type { Game, GameStatus } from "@models/Game"
 import { formatCourt } from "@utils/formatCourt"
 
 interface Props {
   game: Game
   hideMatchDay?: boolean
   hideCourt?: boolean
+  status?: GameStatus
 }
 
-const { game, hideMatchDay = false, hideCourt = false }: Props = Astro.props
+const {
+  game,
+  hideMatchDay = false,
+  hideCourt = false,
+  status,
+}: Props = Astro.props
 
 const standings = await getStandings()
 const getTeamStandings = (code: string) =>
   standings.find((standing) => standing.Codigo_equipo === code)
+
+const statusText = {
+  A: "Aplazado",
+  C: "",
+  F: "Finalizado",
+  S: "Suspendido",
+  N: "No presentado",
+  O: "Aplazado",
+  R: "",
+}
 ---
 
 <article class="game-card">
@@ -28,6 +44,7 @@ const getTeamStandings = (code: string) =>
       <span>{game.Hora}</span>
     </p>
     {!hideCourt && <p>{formatCourt(game.Campo)}</p>}
+    {!!status && <p class="game-status">{statusText[status]}</p>}
   </header>
   <div class="game-card-wrapper">
     <div class="game-card-teams">
@@ -101,6 +118,10 @@ const getTeamStandings = (code: string) =>
       .game-date {
         display: flex;
         gap: 0.4rem;
+      }
+
+      .game-status {
+        font-weight: 600;
       }
     }
 

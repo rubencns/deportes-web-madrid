@@ -43,7 +43,12 @@ const nextMatchDayGamesOfGroup2 = gamesOfGroup2
     <section class="cards-container">
       {
         currentMatchDayGamesOfGroup1.map((game) => (
-          <GameCard game={game} hideMatchDay hideCourt />
+          <GameCard
+            game={game}
+            hideMatchDay
+            hideCourt
+            status={game.Estado !== "F" ? game.Estado : undefined}
+          />
         ))
       }
     </section>
@@ -51,7 +56,12 @@ const nextMatchDayGamesOfGroup2 = gamesOfGroup2
     <section class="cards-container">
       {
         currentMatchDayGamesOfGroup2.map((game) => (
-          <GameCard game={game} hideMatchDay hideCourt />
+          <GameCard
+            game={game}
+            hideMatchDay
+            hideCourt
+            status={game.Estado !== "F" ? game.Estado : undefined}
+          />
         ))
       }
     </section>

@@ -2,14 +2,14 @@ name: Scheduled redeployment for database update
 
 on:
   schedule:
-    - cron: '0 14 * * *' # A las 14:00 PM UTC
-    - cron: '0 19 * * *' # A las 19:00 PM UTC
+    - cron: "0 14 * * *" # A las 14:00 PM UTC
+    - cron: "0 19 * * *" # A las 19:00 PM UTC
 
 jobs:
   curl_request:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Execute curl POST
-      run: |
-        curl -X POST https://api.vercel.com/v1/integrations/deploy/prj_UsBxg4nHTtpZZJ9NNnBJrhs3thBX/B9iPUdxZlv
+      - name: Execute curl POST
+        run: |
+          curl -X POST https://api.vercel.com/v1/integrations/deploy/prj_UsBxg4nHTtpZZJ9NNnBJrhs3thBX/B9iPUdxZlv
