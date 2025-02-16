@@ -1,5 +1,5 @@
 ---
-import { groupCode1 } from "@constants/common"
+import { groupCode2 } from "@constants/common"
 import { GAMES_URL, HOME_URL, STANDINGS_URL } from "@constants/routes"
 import BasketballIcon from "@components/icons/BasketballIcon.astro"
 
@@ -15,11 +15,11 @@ const { pathname } = Astro.url
     <a class={pathname === HOME_URL ? "active" : ""} href={HOME_URL}>Inicio</a>
     <a
       class={pathname.includes(STANDINGS_URL) ? "active" : ""}
-      href={`${STANDINGS_URL}/${groupCode1}`}>Clasificación</a
+      href={`${STANDINGS_URL}/${groupCode2}`}>Clasificación</a
     >
     <a
       class={pathname.includes(GAMES_URL) ? "active" : ""}
-      href={`${GAMES_URL}/${groupCode1}`}>Partidos</a
+      href={`${GAMES_URL}/${groupCode2}`}>Partidos</a
     >
   </nav>
 </header>
