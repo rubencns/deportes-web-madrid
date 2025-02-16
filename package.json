@@ -17,6 +17,7 @@
     "csv-parser": "^3.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.50.1",
     "@types/node": "^22.8.4",
     "tsx": "^4.19.2"
   }
