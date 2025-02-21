@@ -8,7 +8,7 @@ import {
 } from "@services/games"
 import { groupCode1, groupCode2, groupCodes } from "src/constants/common"
 import { GAMES_URL } from "src/constants/routes"
-import type { MatchDayUI } from "@models/Game"
+import type { GameStatus, MatchDayUI } from "@models/Game"
 import { isHighestScore } from "@utils/isHighestScore"
 import { getStandings } from "@services/standings"
 import { formatDate } from "@utils/formatDate"
@@ -37,6 +37,17 @@ const isMatchDayOpen = (matchDay: MatchDayUI) => {
 
 const isNextMatchDayOpen = (matchDay: MatchDayUI) => {
   return parseInt(matchDay.Jornada) === parseInt(currentMatchDay.Jornada) + 1
+}
+console.log({ matchDays })
+
+const statusName: Record<GameStatus, string> = {
+  A: "Reprogramado",
+  N: "Incomparecencia",
+  S: "Suspendido",
+  R: "",
+  F: "Finalizado",
+  O: "Aplazado",
+  C: "Desconocido",
 }
 ---
 
@@ -102,7 +113,7 @@ const isNextMatchDayOpen = (matchDay: MatchDayUI) => {
                             </p>
                           </td>
                         ) : (
-                          <td />
+                          <td>{statusName[game.Estado]}</td>
                         )}
                         <td>{game.Hora}</td>
                         <td>{formatCourt(game.Campo)}</td>
