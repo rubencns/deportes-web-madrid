@@ -88,7 +88,7 @@ const isNextMatchDayOpen = (matchDay: MatchDayUI) => {
                             </span>
                           </p>
                         </td>
-                        {game.Estado === "F" && (
+                        {game.Estado === "F" ? (
                           <td>
                             <p
                               class={`game-first-result${isHighestScore(game.Resultado1, game.Resultado2) ? " highest-score" : ""}`}
@@ -101,6 +101,8 @@ const isNextMatchDayOpen = (matchDay: MatchDayUI) => {
                               {game.Resultado2}
                             </p>
                           </td>
+                        ) : (
+                          <td />
                         )}
                         <td>{game.Hora}</td>
                         <td>{formatCourt(game.Campo)}</td>
