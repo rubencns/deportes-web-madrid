@@ -113,7 +113,13 @@ const statusName: Record<GameStatus, string> = {
                             </p>
                           </td>
                         ) : (
-                          <td>{statusName[game.Estado]}</td>
+                          <td title={statusName[game.Estado]}>
+                            {statusName[game.Estado] ? (
+                              <div class="game-status">
+                                {statusName[game.Estado].charAt(0)}
+                              </div>
+                            ) : null}
+                          </td>
                         )}
                         <td>{game.Hora}</td>
                         <td>{formatCourt(game.Campo)}</td>
@@ -254,5 +260,16 @@ const statusName: Record<GameStatus, string> = {
 
   .position {
     font-size: 0.6rem;
+  }
+
+  .game-status {
+    display: grid;
+    place-items: center;
+    width: 1.375rem;
+    height: 1.375rem;
+    border-radius: 50%;
+    border: 0.0625rem solid #161616;
+    color: #161616;
+    font-size: 0.75rem;
   }
 </style>
