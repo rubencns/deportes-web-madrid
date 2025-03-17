@@ -45,7 +45,7 @@ los Comités de disciplina deportiva o de competición
 > N: no presentado alguno de los equipos. Para saber
 quién ha sido el equipo que no se ha presentado,
 habría que mirar el resultado ( el equipo que ha
-perdido seria el no presentado)
+perdido sería el no presentado)
 > O: aplazado organización
 > R: se emplea para encuentros de los cuales la
 organización desconoce el resultado. Lo habitual en

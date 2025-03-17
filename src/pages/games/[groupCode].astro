@@ -38,16 +38,15 @@ const isMatchDayOpen = (matchDay: MatchDayUI) => {
 const isNextMatchDayOpen = (matchDay: MatchDayUI) => {
   return parseInt(matchDay.Jornada) === parseInt(currentMatchDay.Jornada) + 1
 }
-console.log({ matchDays })
 
 const statusName: Record<GameStatus, string> = {
-  A: "Reprogramado",
-  N: "Incomparecencia",
+  A: "Reprogramado: encuentro reprogramado, es decir, encuentro que tras haber sido suspendido o aplazado ha sido dotado de nueva fecha, campo y hora de celebración.",
+  N: "Incomparecencia: no presentado alguno de los equipos. Para saber quién ha sido el equipo que no se ha presentado, habría que mirar el resultado ( el equipo que ha perdido sería el no presentado)",
   S: "Suspendido",
   R: "",
   F: "Finalizado",
-  O: "Aplazado",
-  C: "Desconocido",
+  O: "Aplazado: aplazado organización",
+  C: "Desconocido: se emplea para encuentros, cuyas actas, antes de darles un resultado, tienen que ser tramitadas por los Comités de disciplina deportiva o de competición",
 }
 ---
 
@@ -66,6 +65,70 @@ const statusName: Record<GameStatus, string> = {
       >
     </header>
     <div class="games-container">
+      <details>
+        <summary>Partidos aplazados</summary>
+        <div class="game-list-container">
+          <table class="game-list">
+            <tbody>
+              {
+                games
+                  .filter((game) => game.Estado === "A")
+                  .map((game) => (
+                    <tr>
+                      <td class="teams">
+                        <p
+                          class={`${isHighestScore(game.Resultado1, game.Resultado2) ? " highest-score" : ""}`}
+                        >
+                          {game.Equipo_local}
+                          <span class="position">
+                            {` (${getTeamStandings(game.Codigo_equipo1)?.Posicion}º)`}
+                          </span>
+                        </p>
+                        <p
+                          class={`${isHighestScore(game.Resultado2, game.Resultado1) ? " highest-score" : ""}`}
+                        >
+                          {game.Equipo_visitante}
+                          <span class="position">
+                            {` (${getTeamStandings(game.Codigo_equipo2)?.Posicion}º)`}
+                          </span>
+                        </p>
+                      </td>
+                      {game.Estado === "F" ? (
+                        <td>
+                          <p
+                            class={`game-first-result${isHighestScore(game.Resultado1, game.Resultado2) ? " highest-score" : ""}`}
+                          >
+                            {game.Resultado1}
+                          </p>
+                          <p
+                            class={`${isHighestScore(game.Resultado2, game.Resultado1) ? " highest-score" : ""}`}
+                          >
+                            {game.Resultado2}
+                          </p>
+                        </td>
+                      ) : (
+                        <td
+                          title={statusName[game.Estado]}
+                          onclick="handleStatusClick(this)"
+                        >
+                          {statusName[game.Estado] ? (
+                            <div class="game-status">
+                              {statusName[game.Estado].charAt(0)}
+                            </div>
+                          ) : null}
+                        </td>
+                      )}
+                      <td style="font-size: 12px">
+                        {formatDate(game.Fecha) + " · " + game.Hora}
+                      </td>
+                      <td>{formatCourt(game.Campo)}</td>
+                    </tr>
+                  ))
+              }
+            </tbody>
+          </table>
+        </div>
+      </details>
       {
         matchDays.map((matchDay) => (
           <details
@@ -113,7 +176,10 @@ const statusName: Record<GameStatus, string> = {
                             </p>
                           </td>
                         ) : (
-                          <td title={statusName[game.Estado]}>
+                          <td
+                            title={statusName[game.Estado]}
+                            onclick="handleStatusClick(this)"
+                          >
                             {statusName[game.Estado] ? (
                               <div class="game-status">
                                 {statusName[game.Estado].charAt(0)}
@@ -134,6 +200,21 @@ const statusName: Record<GameStatus, string> = {
     </div>
   </main>
 </Layout>
+
+<script>
+  declare global {
+    interface Window {
+      handleStatusClick: (element: HTMLElement) => void
+    }
+  }
+
+  window.handleStatusClick = (element: HTMLElement) => {
+    const status = element.getAttribute("title")
+    if (status) {
+      alert(status)
+    }
+  }
+</script>
 
 <style>
   .main {
@@ -263,13 +344,16 @@ const statusName: Record<GameStatus, string> = {
   }
 
   .game-status {
+    margin: auto;
     display: grid;
     place-items: center;
     width: 1.375rem;
     height: 1.375rem;
     border-radius: 50%;
-    border: 0.0625rem solid #161616;
-    color: #161616;
+    border: 0.0625rem solid var(--primary-color);
+    background: var(--primary-very-light-color);
+    color: var(--primary-color);
+    box-shadow: 0 0 0.08rem var(--primary-color);
     font-size: 0.75rem;
   }
 </style>
