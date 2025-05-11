@@ -1,14 +1,14 @@
 ---
-import Header from "@components/Header.astro"
-import Layout from "@layouts/Layout.astro"
+import Header from '@components/Header.astro'
+import Layout from '@layouts/Layout.astro'
 import {
   getCurrentMatchDayByGroupCode,
   getGamesByGroupCode,
   getNextMatchDayByGroupCode,
-} from "@services/games"
-import { groupCode1, groupCode2 } from "src/constants/common"
-import GameCard from "@components/GameCard.astro"
-import Search from "@components/Search.astro"
+} from '@services/games'
+import { groupCode1, groupCode2 } from 'src/constants/common'
+import GameCard from '@components/GameCard.astro'
+import Search from '@components/Search.astro'
 
 const gamesOfGroup1 = await getGamesByGroupCode(groupCode1)
 const gamesOfGroup2 = await getGamesByGroupCode(groupCode2)
@@ -47,7 +47,7 @@ const nextMatchDayGamesOfGroup2 = gamesOfGroup2
             game={game}
             hideMatchDay
             hideCourt
-            status={game.Estado !== "F" ? game.Estado : undefined}
+            status={game.Estado !== 'F' ? game.Estado : undefined}
           />
         ))
       }
@@ -60,29 +60,37 @@ const nextMatchDayGamesOfGroup2 = gamesOfGroup2
             game={game}
             hideMatchDay
             hideCourt
-            status={game.Estado !== "F" ? game.Estado : undefined}
+            status={game.Estado !== 'F' ? game.Estado : undefined}
           />
         ))
       }
     </section>
     <h2 class="section-title">Próximos partidos</h2>
     <h3 class="group-name">Grupo 1</h3>
-    <section class="cards-container">
-      {
-        !!nextMatchDayGamesOfGroup1.length ? nextMatchDayGamesOfGroup1.map((game) => (
-          <GameCard game={game} hideMatchDay />
-        )) : <p>No hay próximos partidos.</p>
-      }
-    </section>
+
+    {
+      !!nextMatchDayGamesOfGroup1.length ? (
+        <section class="cards-container">
+          {nextMatchDayGamesOfGroup1.map((game) => (
+            <GameCard game={game} hideMatchDay />
+          ))}
+        </section>
+      ) : (
+        <p class="empty-cards-text">No hay próximos partidos.</p>
+      )
+    }
     <h3 class="group-name">Grupo 2</h3>
-    <secion class="cards-container">
-      {
-         !!nextMatchDayGamesOfGroup2.length ?  nextMatchDayGamesOfGroup2.map((game) => (
-          <GameCard game={game} hideMatchDay />
-        ))
-        : <p>No hay próximos partidos.</p>
-      }
-    </secion>
+    {
+      !!nextMatchDayGamesOfGroup2.length ? (
+        <section class="cards-container">
+          {nextMatchDayGamesOfGroup2.map((game) => (
+            <GameCard game={game} hideMatchDay />
+          ))}
+        </section>
+      ) : (
+        <p>No hay próximos partidos.</p>
+      )
+    }
   </main>
 </Layout>
 
@@ -122,5 +130,9 @@ const nextMatchDayGamesOfGroup2 = gamesOfGroup2
     &::-webkit-scrollbar {
       display: none;
     }
+  }
+
+  .empty-cards-text {
+    margin-bottom: 1.5rem;
   }
 </style>
