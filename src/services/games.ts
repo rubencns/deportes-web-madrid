@@ -1,6 +1,6 @@
-import type { Game, MatchDayUI } from "@models/Game"
-import { capitalizeFirstLetterOfEachWord } from "@utils/capitalizeLetters"
-import rawGames from "@database/games.json"
+import type { Game, MatchDayUI } from '@models/Game'
+import { capitalizeFirstLetterOfEachWord } from '@utils/capitalizeLetters'
+import rawGames from '@database/games.json'
 
 const games = rawGames as unknown as Game[]
 
@@ -20,9 +20,7 @@ export const getGamesByGroupCode = async (code: string): Promise<Game[]> => {
   return filteredGames
 }
 
-export const getMatchDaysByGroupCode = async (
-  code: string
-): Promise<MatchDayUI[]> => {
+export const getMatchDaysByGroupCode = async (code: string): Promise<MatchDayUI[]> => {
   const gamesByGroupCode = await getGamesByGroupCode(code)
   const filteredMatchDays = gamesByGroupCode.map((game) => ({
     Jornada: game.Jornada,
@@ -31,40 +29,29 @@ export const getMatchDaysByGroupCode = async (
   }))
 
   const uniqueMatchDays = filteredMatchDays.filter((matchDay, index, self) => {
-    return (
-      index ===
-      self.findIndex((matchDay2) => matchDay.Jornada === matchDay2.Jornada)
-    )
+    return index === self.findIndex((matchDay2) => matchDay.Jornada === matchDay2.Jornada)
   })
 
-  const orderedMatchDays = uniqueMatchDays.sort(
-    (a, b) => parseInt(a.Jornada) - parseInt(b.Jornada)
-  )
+  const orderedMatchDays = uniqueMatchDays.sort((a, b) => parseInt(a.Jornada) - parseInt(b.Jornada))
 
   return orderedMatchDays
 }
 
-export const getCurrentMatchDayByGroupCode = async (
-  code: string
-): Promise<MatchDayUI> => {
+export const getCurrentMatchDayByGroupCode = async (code: string): Promise<MatchDayUI> => {
   const gamesByGroupCode = (await getGamesByGroupCode(code)).sort(
-    (a, b) => parseInt(b.Jornada) - parseInt(a.Jornada)
+    (a, b) => parseInt(b.Jornada) - parseInt(a.Jornada),
   )
-  const currentMatchDay = gamesByGroupCode.find(
-    (game) => game.Fecha < new Date().toISOString()
-  )!
+  const currentMatchDay = gamesByGroupCode.find((game) => game.Fecha < new Date().toISOString())!
 
   return currentMatchDay
 }
 
-export const getNextMatchDayByGroupCode = async (
-  code: string
-): Promise<MatchDayUI> => {
+export const getNextMatchDayByGroupCode = async (code: string): Promise<MatchDayUI> => {
   const gamesByGroupCode = await getGamesByGroupCode(code)
   const currentMatchDay = await getCurrentMatchDayByGroupCode(code)
 
   const nextMatchDay = gamesByGroupCode.find(
-    (game) => parseInt(game.Jornada) === parseInt(currentMatchDay.Jornada) + 1
+    (game) => parseInt(game.Jornada) === parseInt(currentMatchDay.Jornada) + 1,
   )!
 
   return nextMatchDay

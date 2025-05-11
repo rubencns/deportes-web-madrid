@@ -2,8 +2,8 @@ name: Scheduled redeployment for database update
 
 on:
   schedule:
-    - cron: "0 14 * * *" # A las 14:00 PM UTC
-    - cron: "0 19 * * *" # A las 19:00 PM UTC
+    - cron: '0 14 * * *' # A las 14:00 PM UTC
+    - cron: '0 19 * * *' # A las 19:00 PM UTC
 
 jobs:
   curl_request:

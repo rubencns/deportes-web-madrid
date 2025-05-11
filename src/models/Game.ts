@@ -24,7 +24,7 @@ export interface Game {
   Equipo_local: string
   Equipo_visitante: string
   Campo: string
-  Sexo_grupo: "M" | "F"
+  Sexo_grupo: 'M' | 'F'
   Distrito: string
   Observaciones: string
   SISTEMA_COMPETICION: string
@@ -51,7 +51,7 @@ perdido sería el no presentado)
 organización desconoce el resultado. Lo habitual en
 este caso es que el acta del encuentro no haya sido
 entregada por el árbitro.  */
-export type GameStatus = "A" | "C" | "F" | "S" | "N" | "O" | "R"
+export type GameStatus = 'A' | 'C' | 'F' | 'S' | 'N' | 'O' | 'R'
 
 /* Un 1 indica que el partido ha sido programado: se le ha
 asignado fecha, hora y campo. */

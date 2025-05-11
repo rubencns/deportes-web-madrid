@@ -1,11 +1,11 @@
-import csvParser from "csv-parser";
-import { Readable } from "stream";
+import csvParser from 'csv-parser'
+import { Readable } from 'stream'
 
 export const convertCsvToJson = async <T>(csvContent: string): Promise<T[]> => {
-  const results: T[] = [];
-  const stream = new Readable();
-  stream.push(csvContent);
-  stream.push(null);
+  const results: T[] = []
+  const stream = new Readable()
+  stream.push(csvContent)
+  stream.push(null)
 
   return new Promise<T[]>((resolve, reject) => {
     stream
@@ -13,10 +13,10 @@ export const convertCsvToJson = async <T>(csvContent: string): Promise<T[]> => {
       .pipe(csvParser({ separator: ';' }))
       .on('data', (data) => results.push(data))
       .on('end', () => {
-        resolve(results);
+        resolve(results)
       })
       .on('error', (error) => {
-        reject(error);
-      });
-  });
-};
+        reject(error)
+      })
+  })
+}

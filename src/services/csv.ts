@@ -1,60 +1,64 @@
-import { competitionCode, gamesCsvUrl, standingsCsvUrl } from "@constants/common";
-import type { Game } from "@models/Game";
-import type { Standing } from "@models/Standing";
-import { convertCsvToJson } from "@utils/convertCsvToJson";
-import fs from "fs/promises";
-import path from "path";
+import { competitionCode, gamesCsvUrl, standingsCsvUrl } from '@constants/common'
+import type { Game } from '@models/Game'
+import type { Standing } from '@models/Standing'
+import { convertCsvToJson } from '@utils/convertCsvToJson'
+import fs from 'fs/promises'
+import path from 'path'
 
-const gamesJsonPath = path.join(process.cwd(), "/src/database/games.json");
-const standingsJsonPath = path.join(process.cwd(), "/src/database/standings.json");
+const gamesJsonPath = path.join(process.cwd(), '/src/database/games.json')
+const standingsJsonPath = path.join(process.cwd(), '/src/database/standings.json')
 
 const getCsvByUrl = async (url: string) => {
   try {
-    const response = await fetch(url);
+    const response = await fetch(url)
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error('Network response was not ok')
     }
 
-    const csvData = await response.text();
+    const csvData = await response.text()
 
-    return csvData;
+    return csvData
   } catch (error) {
-    console.error('Fetching CSV failed:', error);
-    throw error;
+    console.error('Fetching CSV failed:', error)
+    throw error
   }
-};
+}
 
 const generateGamesJsonFile = async () => {
-  const csvData = await getCsvByUrl(gamesCsvUrl);
-  const games = await convertCsvToJson<Game>(csvData);
+  const csvData = await getCsvByUrl(gamesCsvUrl)
+  const games = await convertCsvToJson<Game>(csvData)
 
-  const filteredGamesByCompetition = games.filter((game) => game.Codigo_competicion.trim() === competitionCode)
+  const filteredGamesByCompetition = games.filter(
+    (game) => game.Codigo_competicion.trim() === competitionCode,
+  )
 
-  const gamesJson = JSON.stringify(filteredGamesByCompetition, null, 2);
+  const gamesJson = JSON.stringify(filteredGamesByCompetition, null, 2)
 
-  await fs.writeFile(gamesJsonPath, gamesJson);
+  await fs.writeFile(gamesJsonPath, gamesJson)
 }
 
 const generateStandingsJsonFile = async () => {
-  const csvData = await getCsvByUrl(standingsCsvUrl);
-  const standings = await convertCsvToJson<Standing>(csvData);
+  const csvData = await getCsvByUrl(standingsCsvUrl)
+  const standings = await convertCsvToJson<Standing>(csvData)
 
-  const filteredStandingsByCompetition = standings.filter((standing) => standing.Codigo_competicion.trim() === competitionCode)
+  const filteredStandingsByCompetition = standings.filter(
+    (standing) => standing.Codigo_competicion.trim() === competitionCode,
+  )
 
-  const standingsJson = JSON.stringify(filteredStandingsByCompetition, null, 2);
+  const standingsJson = JSON.stringify(filteredStandingsByCompetition, null, 2)
 
-  await fs.writeFile(standingsJsonPath, standingsJson);
+  await fs.writeFile(standingsJsonPath, standingsJson)
 }
 
 async function runPreBuildTasks() {
   try {
-    await generateGamesJsonFile();
-    await generateStandingsJsonFile();
-    console.log("Database files generated successfully!");
+    await generateGamesJsonFile()
+    await generateStandingsJsonFile()
+    console.log('Database files generated successfully!')
   } catch (error) {
-    console.error("Failed to generate database files:", error);
-    process.exit(1);
+    console.error('Failed to generate database files:', error)
+    process.exit(1)
   }
 }
 
-runPreBuildTasks();
+runPreBuildTasks()
