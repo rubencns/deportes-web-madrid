@@ -33,7 +33,7 @@ const nextMatchDayGame = await getNextMatchDayByGroupCode(
   teamStanding?.Codigo_grupo || "0"
 )
 const nextTeamGame = teamGames.find(
-  (game) => game.Jornada === nextMatchDayGame.Jornada
+  (game) => game.Jornada === nextMatchDayGame?.Jornada
 )
 
 const jerseyColors = await getJerseyColorByTeamCode(teamCode)
@@ -112,7 +112,7 @@ const winningStreak = await getWinningStreakByTeamCode(teamCode)
         nextTeamGame ? (
           <GameCard game={nextTeamGame} />
         ) : (
-          <p>No hay partido próximo</p>
+          <p>No hay partido próximo.</p>
         )
       }
     </section>
