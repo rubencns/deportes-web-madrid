@@ -11,11 +11,17 @@ const standingsJsonPath = path.join(process.cwd(), '/src/database/standings.json
 const getCsvByUrl = async (url: string) => {
   try {
     const response = await fetch(url)
+
     if (!response.ok) {
       throw new Error('Network response was not ok')
     }
 
-    const csvData = await response.text()
+    // Leer los datos como ArrayBuffer
+    const arrayBuffer = await response.arrayBuffer()
+
+    // Decodificar los datos manualmente
+    const decoder = new TextDecoder('iso-8859-1')
+    const csvData = decoder.decode(arrayBuffer)
 
     return csvData
   } catch (error) {
@@ -34,7 +40,7 @@ const generateGamesJsonFile = async () => {
 
   const gamesJson = JSON.stringify(filteredGamesByCompetition, null, 2)
 
-  await fs.writeFile(gamesJsonPath, gamesJson)
+  await fs.writeFile(gamesJsonPath, gamesJson, 'utf-8')
 }
 
 const generateStandingsJsonFile = async () => {
@@ -47,7 +53,7 @@ const generateStandingsJsonFile = async () => {
 
   const standingsJson = JSON.stringify(filteredStandingsByCompetition, null, 2)
 
-  await fs.writeFile(standingsJsonPath, standingsJson)
+  await fs.writeFile(standingsJsonPath, standingsJson, 'utf-8')
 }
 
 async function runPreBuildTasks() {
