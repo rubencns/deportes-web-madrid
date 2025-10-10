@@ -3,9 +3,9 @@ export const standingsCsvUrl =
 export const gamesCsvUrl =
   'https://datos.madrid.es/egob/catalogo/211549-3-juegos-deportivos-actual.csv'
 
-export const competitionCode = '8859'
-export const groupCode1 = '24203'
-export const groupCode2 = '24204'
+export const competitionCode = '8946'
+export const groupCode1 = '27802'
+export const groupCode2 = '27803'
 
 export const groupCodes: string[] = [groupCode1, groupCode2]
 

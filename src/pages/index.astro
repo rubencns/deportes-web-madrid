@@ -19,10 +19,10 @@ const nextMatchDayOfGroup1 = await getNextMatchDayByGroupCode(groupCode1)
 const nextMatchDayOfGroup2 = await getNextMatchDayByGroupCode(groupCode2)
 
 const currentMatchDayGamesOfGroup1 = gamesOfGroup1
-  .filter((game) => game.Jornada === currentMatchDayOfGroup1.Jornada)
+  .filter((game) => game.Jornada === currentMatchDayOfGroup1?.Jornada)
   .sort((a, b) => parseInt(a.Partido) - parseInt(b.Partido))
 const currentMatchDayGamesOfGroup2 = gamesOfGroup2
-  .filter((game) => game.Jornada === currentMatchDayOfGroup2.Jornada)
+  .filter((game) => game.Jornada === currentMatchDayOfGroup2?.Jornada)
   .sort((a, b) => parseInt(a.Partido) - parseInt(b.Partido))
 const nextMatchDayGamesOfGroup1 = gamesOfGroup1
   .filter((game) => game.Jornada === nextMatchDayOfGroup1?.Jornada)
@@ -40,31 +40,39 @@ const nextMatchDayGamesOfGroup2 = gamesOfGroup2
     </section>
     <h2 class="section-title">Últimos resultados</h2>
     <h3 class="group-name">Grupo 1</h3>
-    <section class="cards-container">
-      {
+    {
+      !!currentMatchDayGamesOfGroup1.length ? (
         currentMatchDayGamesOfGroup1.map((game) => (
-          <GameCard
-            game={game}
-            hideMatchDay
-            hideCourt
-            status={game.Estado !== 'F' ? game.Estado : undefined}
-          />
+          <section class="cards-container">
+            <GameCard
+              game={game}
+              hideMatchDay
+              hideCourt
+              status={game.Estado !== 'F' ? game.Estado : undefined}
+            />
+          </section>
         ))
-      }
-    </section>
+      ) : (
+        <p class="empty-cards-text">No hay partidos jugados.</p>
+      )
+    }
     <h3 class="group-name">Grupo 2</h3>
-    <section class="cards-container">
-      {
+    {
+      !!currentMatchDayGamesOfGroup2.length ? (
         currentMatchDayGamesOfGroup2.map((game) => (
-          <GameCard
-            game={game}
-            hideMatchDay
-            hideCourt
-            status={game.Estado !== 'F' ? game.Estado : undefined}
-          />
+          <section class="cards-container">
+            <GameCard
+              game={game}
+              hideMatchDay
+              hideCourt
+              status={game.Estado !== 'F' ? game.Estado : undefined}
+            />
+          </section>
         ))
-      }
-    </section>
+      ) : (
+        <p class="empty-cards-text">No hay partidos jugados.</p>
+      )
+    }
     <h2 class="section-title">Próximos partidos</h2>
     <h3 class="group-name">Grupo 1</h3>
     {

@@ -1,9 +1,9 @@
 ---
-import Header from "@components/Header.astro"
-import Layout from "@layouts/Layout.astro"
-import { getStandingsByGroupCode } from "@services/standings"
-import { groupCode1, groupCode2, groupCodes } from "src/constants/common"
-import { STANDINGS_URL, TEAM_URL } from "src/constants/routes"
+import Header from '@components/Header.astro'
+import Layout from '@layouts/Layout.astro'
+import { getStandingsByGroupCode } from '@services/standings'
+import { groupCode1, groupCode2, groupCodes } from 'src/constants/common'
+import { STANDINGS_URL, TEAM_URL } from 'src/constants/routes'
 
 export function getStaticPaths() {
   return groupCodes.map((groupCode) => ({
@@ -23,11 +23,11 @@ const standings = await getStandingsByGroupCode(groupCode)
     <h2 class="title">Clasificación</h2>
     <header class="group-buttons-container">
       <a
-        class={`group-button${pathname.includes(groupCode1) ? " active" : ""}`}
+        class={`group-button${pathname.includes(groupCode1) ? ' active' : ''}`}
         href={`${STANDINGS_URL}/${groupCode1}`}>Grupo 1</a
       >
       <a
-        class={`group-button${pathname.includes(groupCode2) ? " active" : ""}`}
+        class={`group-button${pathname.includes(groupCode2) ? ' active' : ''}`}
         href={`${STANDINGS_URL}/${groupCode2}`}>Grupo 2</a
       >
     </header>
@@ -48,23 +48,27 @@ const standings = await getStandingsByGroupCode(groupCode)
         </thead>
         <tbody>
           {
-            standings
-              .sort((a, b) => parseInt(a.Posicion) - parseInt(b.Posicion))
-              .map((standing) => (
-                <tr
-                  onclick={`window.location="${TEAM_URL}/${standing.Codigo_equipo}"`}
-                >
-                  <td>{standing.Posicion}</td>
-                  <td class="team">{standing.Nombre_equipo}</td>
-                  <td>{parseInt(standing.Puntos)}</td>
-                  <td>{standing.Partidos_jugados}</td>
-                  <td>{standing.Partidos_ganados}</td>
-                  <td>{standing.Partidos_empatados}</td>
-                  <td>{standing.Partidos_perdidos}</td>
-                  <td>{standing.Goles_favor}</td>
-                  <td>{standing.Goles_contra}</td>
-                </tr>
-              ))
+            !!standings.length ? (
+              standings
+                .sort((a, b) => parseInt(a.Posicion) - parseInt(b.Posicion))
+                .map((standing) => (
+                  <tr onclick={`window.location="${TEAM_URL}/${standing.Codigo_equipo}"`}>
+                    <td>{standing.Posicion}</td>
+                    <td class="team">{standing.Nombre_equipo}</td>
+                    <td>{parseInt(standing.Puntos)}</td>
+                    <td>{standing.Partidos_jugados}</td>
+                    <td>{standing.Partidos_ganados}</td>
+                    <td>{standing.Partidos_empatados}</td>
+                    <td>{standing.Partidos_perdidos}</td>
+                    <td>{standing.Goles_favor}</td>
+                    <td>{standing.Goles_contra}</td>
+                  </tr>
+                ))
+            ) : (
+              <tr>
+                <td colspan="9">No hay datos disponibles</td>
+              </tr>
+            )
           }
         </tbody>
       </table>

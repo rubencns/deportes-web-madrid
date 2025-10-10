@@ -1,18 +1,18 @@
 ---
-import Header from "@components/Header.astro"
-import Layout from "@layouts/Layout.astro"
+import Header from '@components/Header.astro'
+import Layout from '@layouts/Layout.astro'
 import {
   getGamesByGroupCode,
   getMatchDaysByGroupCode,
   getCurrentMatchDayByGroupCode,
-} from "@services/games"
-import { groupCode1, groupCode2, groupCodes } from "src/constants/common"
-import { GAMES_URL } from "src/constants/routes"
-import type { GameStatus, MatchDayUI } from "@models/Game"
-import { isHighestScore } from "@utils/isHighestScore"
-import { getStandings } from "@services/standings"
-import { formatDate } from "@utils/formatDate"
-import { formatCourt } from "@utils/formatCourt"
+} from '@services/games'
+import { groupCode1, groupCode2, groupCodes } from 'src/constants/common'
+import { GAMES_URL } from 'src/constants/routes'
+import type { GameStatus, MatchDayUI } from '@models/Game'
+import { isHighestScore } from '@utils/isHighestScore'
+import { getStandings } from '@services/standings'
+import { formatDate } from '@utils/formatDate'
+import { formatCourt } from '@utils/formatCourt'
 
 export function getStaticPaths() {
   return groupCodes.map((groupCode) => ({
@@ -30,23 +30,27 @@ const currentMatchDay = await getCurrentMatchDayByGroupCode(groupCode)
 const standings = await getStandings()
 const getTeamStandings = (code: string) =>
   standings.find((standing) => standing.Codigo_equipo === code)
+const teamStandingsLabel = (code: string) => {
+  const teamStanding = getTeamStandings(code)
+  return teamStanding?.Posicion ? `(${teamStanding?.Posicion}º)` : ''
+}
 
 const isMatchDayOpen = (matchDay: MatchDayUI) => {
-  return matchDay.Jornada === currentMatchDay.Jornada
+  return matchDay.Jornada === currentMatchDay?.Jornada
 }
 
 const isNextMatchDayOpen = (matchDay: MatchDayUI) => {
-  return parseInt(matchDay.Jornada) === parseInt(currentMatchDay.Jornada) + 1
+  return parseInt(matchDay.Jornada) === parseInt(currentMatchDay?.Jornada) + 1
 }
 
 const statusName: Record<GameStatus, string> = {
-  A: "Reprogramado: encuentro reprogramado, es decir, encuentro que tras haber sido suspendido o aplazado ha sido dotado de nueva fecha, campo y hora de celebración.",
-  N: "Incomparecencia: no presentado alguno de los equipos. Para saber quién ha sido el equipo que no se ha presentado, habría que mirar el resultado ( el equipo que ha perdido sería el no presentado)",
-  S: "Suspendido",
-  R: "",
-  F: "Finalizado",
-  O: "Aplazado: aplazado organización",
-  C: "Desconocido: se emplea para encuentros, cuyas actas, antes de darles un resultado, tienen que ser tramitadas por los Comités de disciplina deportiva o de competición",
+  A: 'Reprogramado: encuentro reprogramado, es decir, encuentro que tras haber sido suspendido o aplazado ha sido dotado de nueva fecha, campo y hora de celebración.',
+  N: 'Incomparecencia: no presentado alguno de los equipos. Para saber quién ha sido el equipo que no se ha presentado, habría que mirar el resultado ( el equipo que ha perdido sería el no presentado)',
+  S: 'Suspendido',
+  R: '',
+  F: 'Finalizado',
+  O: 'Aplazado: aplazado organización',
+  C: 'Desconocido: se emplea para encuentros, cuyas actas, antes de darles un resultado, tienen que ser tramitadas por los Comités de disciplina deportiva o de competición',
 }
 ---
 
@@ -56,11 +60,11 @@ const statusName: Record<GameStatus, string> = {
     <h2 class="title">Jornadas</h2>
     <header class="group-buttons-container">
       <a
-        class={`group-button${pathname.includes(groupCode1) ? " active" : ""}`}
+        class={`group-button${pathname.includes(groupCode1) ? ' active' : ''}`}
         href={`${GAMES_URL}/${groupCode1}`}>Grupo 1</a
       >
       <a
-        class={`group-button${pathname.includes(groupCode2) ? " active" : ""}`}
+        class={`group-button${pathname.includes(groupCode2) ? ' active' : ''}`}
         href={`${GAMES_URL}/${groupCode2}`}>Grupo 2</a
       >
     </header>
@@ -72,55 +76,44 @@ const statusName: Record<GameStatus, string> = {
             <tbody>
               {
                 games
-                  .filter((game) => game.Estado === "A")
+                  .filter((game) => game.Estado === 'A')
                   .map((game) => (
                     <tr>
                       <td class="teams">
                         <p
-                          class={`${isHighestScore(game.Resultado1, game.Resultado2) ? " highest-score" : ""}`}
+                          class={`${isHighestScore(game.Resultado1, game.Resultado2) ? ' highest-score' : ''}`}
                         >
                           {game.Equipo_local}
-                          <span class="position">
-                            {` (${getTeamStandings(game.Codigo_equipo1)?.Posicion}º)`}
-                          </span>
+                          <span class="position">{teamStandingsLabel(game.Codigo_equipo1)}</span>
                         </p>
                         <p
-                          class={`${isHighestScore(game.Resultado2, game.Resultado1) ? " highest-score" : ""}`}
+                          class={`${isHighestScore(game.Resultado2, game.Resultado1) ? ' highest-score' : ''}`}
                         >
                           {game.Equipo_visitante}
-                          <span class="position">
-                            {` (${getTeamStandings(game.Codigo_equipo2)?.Posicion}º)`}
-                          </span>
+                          <span class="position">{teamStandingsLabel(game.Codigo_equipo2)}</span>
                         </p>
                       </td>
-                      {game.Estado === "F" ? (
+                      {game.Estado === 'F' ? (
                         <td>
                           <p
-                            class={`game-first-result${isHighestScore(game.Resultado1, game.Resultado2) ? " highest-score" : ""}`}
+                            class={`game-first-result${isHighestScore(game.Resultado1, game.Resultado2) ? ' highest-score' : ''}`}
                           >
                             {game.Resultado1}
                           </p>
                           <p
-                            class={`${isHighestScore(game.Resultado2, game.Resultado1) ? " highest-score" : ""}`}
+                            class={`${isHighestScore(game.Resultado2, game.Resultado1) ? ' highest-score' : ''}`}
                           >
                             {game.Resultado2}
                           </p>
                         </td>
                       ) : (
-                        <td
-                          title={statusName[game.Estado]}
-                          onclick="handleStatusClick(this)"
-                        >
+                        <td title={statusName[game.Estado]} onclick="handleStatusClick(this)">
                           {statusName[game.Estado] ? (
-                            <div class="game-status">
-                              {statusName[game.Estado].charAt(0)}
-                            </div>
+                            <div class="game-status">{statusName[game.Estado].charAt(0)}</div>
                           ) : null}
                         </td>
                       )}
-                      <td style="font-size: 12px">
-                        {formatDate(game.Fecha) + " · " + game.Hora}
-                      </td>
+                      <td style="font-size: 12px">{formatDate(game.Fecha) + ' · ' + game.Hora}</td>
                       <td>{formatCourt(game.Campo)}</td>
                     </tr>
                   ))
@@ -131,9 +124,7 @@ const statusName: Record<GameStatus, string> = {
       </details>
       {
         matchDays.map((matchDay) => (
-          <details
-            open={isMatchDayOpen(matchDay) || isNextMatchDayOpen(matchDay)}
-          >
+          <details open={isMatchDayOpen(matchDay) || isNextMatchDayOpen(matchDay)}>
             <summary>
               Jornada {matchDay.Nombre_jornada} - {formatDate(matchDay.Fecha)}
             </summary>
@@ -146,44 +137,35 @@ const statusName: Record<GameStatus, string> = {
                       <tr>
                         <td class="teams">
                           <p
-                            class={`${isHighestScore(game.Resultado1, game.Resultado2) ? " highest-score" : ""}`}
+                            class={`${isHighestScore(game.Resultado1, game.Resultado2) ? ' highest-score' : ''}`}
                           >
                             {game.Equipo_local}
-                            <span class="position">
-                              {` (${getTeamStandings(game.Codigo_equipo1)?.Posicion}º)`}
-                            </span>
+                            <span class="position">{teamStandingsLabel(game.Codigo_equipo1)}</span>
                           </p>
                           <p
-                            class={`${isHighestScore(game.Resultado2, game.Resultado1) ? " highest-score" : ""}`}
+                            class={`${isHighestScore(game.Resultado2, game.Resultado1) ? ' highest-score' : ''}`}
                           >
                             {game.Equipo_visitante}
-                            <span class="position">
-                              {` (${getTeamStandings(game.Codigo_equipo2)?.Posicion}º)`}
-                            </span>
+                            <span class="position">{teamStandingsLabel(game.Codigo_equipo2)}</span>
                           </p>
                         </td>
-                        {game.Estado === "F" ? (
+                        {game.Estado === 'F' ? (
                           <td>
                             <p
-                              class={`game-first-result${isHighestScore(game.Resultado1, game.Resultado2) ? " highest-score" : ""}`}
+                              class={`game-first-result${isHighestScore(game.Resultado1, game.Resultado2) ? ' highest-score' : ''}`}
                             >
                               {game.Resultado1}
                             </p>
                             <p
-                              class={`${isHighestScore(game.Resultado2, game.Resultado1) ? " highest-score" : ""}`}
+                              class={`${isHighestScore(game.Resultado2, game.Resultado1) ? ' highest-score' : ''}`}
                             >
                               {game.Resultado2}
                             </p>
                           </td>
                         ) : (
-                          <td
-                            title={statusName[game.Estado]}
-                            onclick="handleStatusClick(this)"
-                          >
+                          <td title={statusName[game.Estado]} onclick="handleStatusClick(this)">
                             {statusName[game.Estado] ? (
-                              <div class="game-status">
-                                {statusName[game.Estado].charAt(0)}
-                              </div>
+                              <div class="game-status">{statusName[game.Estado].charAt(0)}</div>
                             ) : null}
                           </td>
                         )}
@@ -209,7 +191,7 @@ const statusName: Record<GameStatus, string> = {
   }
 
   window.handleStatusClick = (element: HTMLElement) => {
-    const status = element.getAttribute("title")
+    const status = element.getAttribute('title')
     if (status) {
       alert(status)
     }
@@ -273,12 +255,12 @@ const statusName: Record<GameStatus, string> = {
     display: block;
     font-size: 1rem;
     font-weight: 600;
-    list-style-type: "▶️";
+    list-style-type: '▶️';
   }
 
   summary::before {
     display: inline-block;
-    content: "▶️";
+    content: '▶️';
     transition: 0.2s;
     transform: scale(1.25);
     margin-right: 0.5rem;

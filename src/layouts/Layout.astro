@@ -1,15 +1,15 @@
 ---
-import { ViewTransitions } from "astro:transitions"
-import Analytics from "@vercel/analytics/astro"
+import { ViewTransitions } from 'astro:transitions'
+import Analytics from '@vercel/analytics/astro'
 
 const currentDate = new Date()
-const lastUpdated = new Intl.DateTimeFormat("es-ES", {
-  timeZone: "Europe/Madrid",
-  day: "2-digit",
-  month: "2-digit",
-  year: "numeric",
-  hour: "2-digit",
-  minute: "2-digit",
+const lastUpdated = new Intl.DateTimeFormat('es-ES', {
+  timeZone: 'Europe/Madrid',
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
   hour12: false,
 }).format(currentDate)
 ---
@@ -29,12 +29,14 @@ const lastUpdated = new Intl.DateTimeFormat("es-ES", {
     <ViewTransitions />
   </head>
   <body>
-    <slot />
-    <footer>
-      <p class="footer-content">Origen de los datos: Ayuntamiento de Madrid</p>
-      <p class="footer-content">Última actualización: {lastUpdated}</p>
-      <p class="footer-content-small">Hecho por Rubén 🏀</p>
-    </footer>
+    <main class="app-container">
+      <slot />
+      <footer>
+        <p class="footer-content">Origen de los datos: Ayuntamiento de Madrid</p>
+        <p class="footer-content">Última actualización: {lastUpdated}</p>
+        <p class="footer-content-small">Hecho por Rubén 🏀</p>
+      </footer>
+    </main>
   </body>
 </html>
 <style is:global>
@@ -47,36 +49,36 @@ const lastUpdated = new Intl.DateTimeFormat("es-ES", {
   }
 
   @font-face {
-    font-family: "Montserrat";
-    src: url("/fonts/Montserrat-Regular.woff2") format("woff2");
+    font-family: 'Montserrat';
+    src: url('/fonts/Montserrat-Regular.woff2') format('woff2');
     font-weight: 400;
     font-display: swap;
   }
 
   @font-face {
-    font-family: "Montserrat";
-    src: url("/fonts/Montserrat-Medium.woff2") format("woff2");
+    font-family: 'Montserrat';
+    src: url('/fonts/Montserrat-Medium.woff2') format('woff2');
     font-weight: 500;
     font-display: swap;
   }
 
   @font-face {
-    font-family: "Montserrat";
-    src: url("/fonts/Montserrat-SemiBold.woff2") format("woff2");
+    font-family: 'Montserrat';
+    src: url('/fonts/Montserrat-SemiBold.woff2') format('woff2');
     font-weight: 600;
     font-display: swap;
   }
 
   @font-face {
-    font-family: "Montserrat";
-    src: url("/fonts/Montserrat-Bold.woff2") format("woff2");
+    font-family: 'Montserrat';
+    src: url('/fonts/Montserrat-Bold.woff2') format('woff2');
     font-weight: 700;
     font-display: swap;
   }
 
   html {
     background: var(--white-color);
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Montserrat', sans-serif;
     color: var(--black-color);
 
     /* background: #ffffff;
@@ -160,8 +162,8 @@ const lastUpdated = new Intl.DateTimeFormat("es-ES", {
   }
 
   body::before {
-    content: "";
-    background-image: url("/images/background-image.webp");
+    content: '';
+    background-image: url('/images/background-image.webp');
     background-size: contain;
     background-repeat: no-repeat;
     background-size: 500px;
@@ -176,11 +178,18 @@ const lastUpdated = new Intl.DateTimeFormat("es-ES", {
     z-index: -1;
   }
 
+  .app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+  }
+
   footer {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-top: auto;
     gap: 0.5rem;
     padding: 1.5rem;
     border-top: 0.0625rem solid var(--primary-very-light-color);
