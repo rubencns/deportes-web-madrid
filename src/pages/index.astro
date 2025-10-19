@@ -42,16 +42,16 @@ const nextMatchDayGamesOfGroup2 = gamesOfGroup2
     <h3 class="group-name">Grupo 1</h3>
     {
       !!currentMatchDayGamesOfGroup1.length ? (
-        currentMatchDayGamesOfGroup1.map((game) => (
-          <section class="cards-container">
+        <section class="cards-container">
+          {currentMatchDayGamesOfGroup1.map((game) => (
             <GameCard
               game={game}
               hideMatchDay
               hideCourt
               status={game.Estado !== 'F' ? game.Estado : undefined}
             />
-          </section>
-        ))
+          ))}
+        </section>
       ) : (
         <p class="empty-cards-text">No hay partidos jugados.</p>
       )
@@ -59,16 +59,16 @@ const nextMatchDayGamesOfGroup2 = gamesOfGroup2
     <h3 class="group-name">Grupo 2</h3>
     {
       !!currentMatchDayGamesOfGroup2.length ? (
-        currentMatchDayGamesOfGroup2.map((game) => (
-          <section class="cards-container">
+        <section class="cards-container">
+          {currentMatchDayGamesOfGroup2.map((game) => (
             <GameCard
               game={game}
               hideMatchDay
               hideCourt
               status={game.Estado !== 'F' ? game.Estado : undefined}
             />
-          </section>
-        ))
+          ))}
+        </section>
       ) : (
         <p class="empty-cards-text">No hay partidos jugados.</p>
       )
