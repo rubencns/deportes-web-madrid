@@ -1,11 +1,11 @@
 ---
-import { getStandings } from "@services/standings"
-import { formatDate } from "@utils/formatDate"
-import { getJerseyColorByColorName } from "@utils/getJerseyColor"
-import { isHighestScore } from "@utils/isHighestScore"
-import JerseyFilledIcon from "@components/icons/JerseyFilledIcon.astro"
-import type { Game, GameStatus } from "@models/Game"
-import { formatCourt } from "@utils/formatCourt"
+import { getStandings } from '@services/standings'
+import { formatDate } from '@utils/formatDate'
+import { getJerseyColorByColorName } from '@utils/getJerseyColor'
+import { isHighestScore } from '@utils/isHighestScore'
+import JerseyFilledIcon from '@components/icons/JerseyFilledIcon.astro'
+import type { Game, GameStatus } from '@models/Game'
+import { formatCourt } from '@utils/formatCourt'
 
 interface Props {
   game: Game
@@ -14,25 +14,24 @@ interface Props {
   status?: GameStatus
 }
 
-const {
-  game,
-  hideMatchDay = false,
-  hideCourt = false,
-  status,
-}: Props = Astro.props
+const { game, hideMatchDay = false, hideCourt = false, status }: Props = Astro.props
 
 const standings = await getStandings()
 const getTeamStandings = (code: string) =>
   standings.find((standing) => standing.Codigo_equipo === code)
+const teamStandingsLabel = (code: string) => {
+  const teamStanding = getTeamStandings(code)
+  return teamStanding?.Posicion ? `(${teamStanding?.Posicion}º)` : ''
+}
 
 const statusText = {
-  A: "Aplazado",
-  C: "",
-  F: "Finalizado",
-  S: "Suspendido",
-  N: "No presentado",
-  O: "Aplazado",
-  R: "",
+  A: 'Aplazado',
+  C: '',
+  F: 'Finalizado',
+  S: 'Suspendido',
+  N: 'No presentado',
+  O: 'Aplazado',
+  R: '',
 }
 ---
 
@@ -49,42 +48,38 @@ const statusText = {
   <div class="game-card-wrapper">
     <div class="game-card-teams">
       <div
-        class={`game-card-team-wrapper${isHighestScore(game.Resultado1, game.Resultado2) ? " highest-score" : ""}`}
+        class={`game-card-team-wrapper${isHighestScore(game.Resultado1, game.Resultado2) ? ' highest-score' : ''}`}
       >
         <div class="game-card-team-jersey">
-          <JerseyFilledIcon
-            color={getJerseyColorByColorName(game.Color_Camiseta_1)}
-          />
+          <JerseyFilledIcon color={getJerseyColorByColorName(game.Color_Camiseta_1)} />
         </div>
         <p class="team-name">{game.Equipo_local}</p>
         <span class="position-small">
-          {` (${getTeamStandings(game.Codigo_equipo1)?.Posicion}º)`}
+          {teamStandingsLabel(game.Codigo_equipo1)}
         </span>
       </div>
       <div
-        class={`game-card-team-wrapper${isHighestScore(game.Resultado2, game.Resultado1) ? " highest-score" : ""}`}
+        class={`game-card-team-wrapper${isHighestScore(game.Resultado2, game.Resultado1) ? ' highest-score' : ''}`}
       >
         <div class="game-card-team-jersey">
-          <JerseyFilledIcon
-            color={getJerseyColorByColorName(game.Color_Camiseta_2)}
-          />
+          <JerseyFilledIcon color={getJerseyColorByColorName(game.Color_Camiseta_2)} />
         </div>
         <p class="team-name">{game.Equipo_visitante}</p>
         <span class="position-small">
-          {` (${getTeamStandings(game.Codigo_equipo2)?.Posicion}º)`}
+          {teamStandingsLabel(game.Codigo_equipo2)}
         </span>
       </div>
     </div>
     {
-      game.Estado === "F" && (
+      game.Estado === 'F' && (
         <div>
           <p
-            class={`game-result game-first-result${isHighestScore(game.Resultado1, game.Resultado2) ? " highest-score" : ""}`}
+            class={`game-result game-first-result${isHighestScore(game.Resultado1, game.Resultado2) ? ' highest-score' : ''}`}
           >
             {game.Resultado1}
           </p>
           <p
-            class={`game-result${isHighestScore(game.Resultado2, game.Resultado1) ? " highest-score" : ""}`}
+            class={`game-result${isHighestScore(game.Resultado2, game.Resultado1) ? ' highest-score' : ''}`}
           >
             {game.Resultado2}
           </p>
