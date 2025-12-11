@@ -7,8 +7,8 @@ import {
   getNextMatchDayByGroupCode,
 } from '@services/games'
 import { groupCode1, groupCode2 } from 'src/constants/common'
-import GameCard from '@components/GameCard.astro'
 import Search from '@components/Search.astro'
+import GameCard from '@components/GameCard.astro'
 
 const gamesOfGroup1 = await getGamesByGroupCode(groupCode1)
 const gamesOfGroup2 = await getGamesByGroupCode(groupCode2)
